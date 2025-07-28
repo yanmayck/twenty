@@ -13,6 +13,7 @@ import { RelationType } from 'src/engine/metadata-modules/field-metadata/interfa
 import { InputTypeDefinitionKind } from 'src/engine/api/graphql/workspace-schema-builder/factories/input-type-definition.factory';
 import { ObjectTypeDefinitionKind } from 'src/engine/api/graphql/workspace-schema-builder/factories/object-type-definition.factory';
 import { formatRelationConnectInputTarget } from 'src/engine/api/graphql/workspace-schema-builder/factories/relation-connect-input-type-definition.factory';
+import { getMorphRelationConnectFieldName } from 'src/engine/api/graphql/workspace-schema-builder/utils/get-morph-relation-connect-field-name.util';
 import { FieldMetadataEntity } from 'src/engine/metadata-modules/field-metadata/field-metadata.entity';
 import { isCompositeFieldMetadataType } from 'src/engine/metadata-modules/field-metadata/utils/is-composite-field-metadata-type.util';
 import { ObjectMetadataEntity } from 'src/engine/metadata-modules/object-metadata/object-metadata.entity';
@@ -219,8 +220,13 @@ const generateRelationField = <
     );
   }
 
+  const fieldName =
+    fieldMetadata.type === FieldMetadataType.RELATION
+      ? fieldMetadata.name
+      : getMorphRelationConnectFieldName(joinColumnName);
+
   // @ts-expect-error legacy noImplicitAny
-  relationField[fieldMetadata.name] = {
+  relationField[fieldName] = {
     type: type,
     description: fieldMetadata.description,
   };

@@ -5,6 +5,7 @@ import { getUniqueConstraintsFields, isDefined } from 'twenty-shared/utils';
 
 import { RelationType } from 'src/engine/metadata-modules/field-metadata/interfaces/relation-type.interface';
 
+import { getMorphRelationJoinColumnName } from 'src/engine/api/graphql/workspace-schema-builder/utils/get-morph-relation-connect-field-name.util';
 import { FieldMetadataEntity } from 'src/engine/metadata-modules/field-metadata/field-metadata.entity';
 import { isCompositeFieldMetadataType } from 'src/engine/metadata-modules/field-metadata/utils/is-composite-field-metadata-type.util';
 import { ObjectMetadataEntity } from 'src/engine/metadata-modules/object-metadata/object-metadata.entity';
@@ -130,10 +131,16 @@ const computeRecordToConnectCondition = (
   targetObjectNameSingular: string;
 } => {
   const field =
-    objectMetadata.fieldsById[objectMetadata.fieldIdByName[connectFieldName]];
+    objectMetadata.fieldsById[objectMetadata.fieldIdByName[connectFieldName]] ||
+    objectMetadata.fieldsById[
+      objectMetadata.fieldIdByJoinColumnName[
+        getMorphRelationJoinColumnName(connectFieldName)
+      ]
+    ];
 
   if (
-    !isFieldMetadataEntityOfType(field, FieldMetadataType.RELATION) ||
+    (!isFieldMetadataEntityOfType(field, FieldMetadataType.RELATION) &&
+      !isFieldMetadataEntityOfType(field, FieldMetadataType.MORPH_RELATION)) ||
     field.settings?.relationType !== RelationType.MANY_TO_ONE
   ) {
     const objectMetadataNameSingular = objectMetadata.nameSingular;
