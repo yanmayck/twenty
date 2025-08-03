@@ -5,6 +5,7 @@ import { useFilteredObjectMetadataItems } from '@/object-metadata/hooks/useFilte
 import { FieldMetadataItem } from '@/object-metadata/types/FieldMetadataItem';
 import { SettingsDataModelPreviewFormCard } from '@/settings/data-model/components/SettingsDataModelPreviewFormCard';
 import { RELATION_TYPES } from '@/settings/data-model/constants/RelationTypes';
+import { SettingsDataModelFieldIsUniqueForm } from '@/settings/data-model/fields/forms/components/SettingsDataModelFieldIsUniqueForm';
 import {
   SettingsDataModelFieldRelationForm,
   SettingsDataModelFieldRelationFormValues,
@@ -21,7 +22,10 @@ import {
   RelationType,
 } from '~/generated-metadata/graphql';
 type SettingsDataModelFieldRelationSettingsFormCardProps = {
-  fieldMetadataItem: Pick<FieldMetadataItem, 'icon' | 'label' | 'type'> &
+  fieldMetadataItem: Pick<
+    FieldMetadataItem,
+    'icon' | 'label' | 'type' | 'isUnique' | 'settings' | 'isCustom'
+  > &
     Partial<Omit<FieldMetadataItem, 'icon' | 'label' | 'type'>>;
   relationFieldMetadataItem?: FieldMetadataItem;
 } & Pick<SettingsDataModelFieldPreviewCardProps, 'objectMetadataItem'>;
@@ -140,10 +144,15 @@ export const SettingsDataModelFieldRelationSettingsFormCard = ({
         </StyledPreviewContent>
       }
       form={
-        <SettingsDataModelFieldRelationForm
-          fieldMetadataItem={fieldMetadataItem}
-          objectMetadataItem={objectMetadataItem}
-        />
+        <>
+          <SettingsDataModelFieldRelationForm
+            fieldMetadataItem={fieldMetadataItem}
+            objectMetadataItem={objectMetadataItem}
+          />
+          <SettingsDataModelFieldIsUniqueForm
+            fieldMetadataItem={fieldMetadataItem}
+          />
+        </>
       }
     />
   );

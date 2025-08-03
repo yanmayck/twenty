@@ -1,9 +1,10 @@
-import { useFormContext } from 'react-hook-form';
 import styled from '@emotion/styled';
+import { useFormContext } from 'react-hook-form';
 import { z } from 'zod';
 
 import { FieldMetadataItem } from '@/object-metadata/types/FieldMetadataItem';
 import { SettingsDataModelPreviewFormCard } from '@/settings/data-model/components/SettingsDataModelPreviewFormCard';
+import { SettingsDataModelFieldIsUniqueForm } from '@/settings/data-model/fields/forms/components/SettingsDataModelFieldIsUniqueForm';
 import {
   settingsDataModelFieldMultiSelectFormSchema,
   SettingsDataModelFieldSelectForm,
@@ -27,7 +28,14 @@ type SettingsDataModelFieldSelectOrMultiSelectFormValues = z.infer<
 type SettingsDataModelFieldSelectSettingsFormCardProps = {
   fieldMetadataItem: Pick<
     FieldMetadataItem,
-    'icon' | 'label' | 'type' | 'defaultValue' | 'options'
+    | 'icon'
+    | 'label'
+    | 'type'
+    | 'defaultValue'
+    | 'options'
+    | 'isUnique'
+    | 'settings'
+    | 'isCustom'
   >;
 } & Pick<SettingsDataModelFieldPreviewCardProps, 'objectMetadataItem'>;
 
@@ -61,9 +69,14 @@ export const SettingsDataModelFieldSelectSettingsFormCard = ({
         />
       }
       form={
-        <SettingsDataModelFieldSelectForm
-          fieldMetadataItem={fieldMetadataItem}
-        />
+        <>
+          <SettingsDataModelFieldSelectForm
+            fieldMetadataItem={fieldMetadataItem}
+          />
+          <SettingsDataModelFieldIsUniqueForm
+            fieldMetadataItem={fieldMetadataItem}
+          />
+        </>
       }
     />
   );
