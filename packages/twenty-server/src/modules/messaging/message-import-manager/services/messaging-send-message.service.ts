@@ -39,12 +39,7 @@ export class MessagingSendMessageService {
     sendMessageInput: SendMessageInput,
     connectedAccount: ConnectedAccountWorkspaceEntity,
   ): Promise<void> {
-    const { handle, connectionParameters, messageChannels, provider } =
-      connectedAccount;
-
-    const { to, subject, body, html } = sendMessageInput;
-
-    switch (provider) {
+    switch (connectedAccount.provider) {
       case ConnectedAccountProvider.GOOGLE: {
         const gmailClient =
           await this.gmailClientProvider.getGmailClient(connectedAccount);
@@ -67,20 +62,20 @@ export class MessagingSendMessageService {
         }
 
         headers.push(
-          `To: ${to}`,
-          `Subject: ${mimeEncode(subject)}`,
+          `To: ${sendMessageInput.to}`,
+          `Subject: ${mimeEncode(sendMessageInput.subject)}`,
           'MIME-Version: 1.0',
           `Content-Type: multipart/alternative; boundary="${boundary}"`,
           '',
           `--${boundary}`,
           'Content-Type: text/plain; charset="UTF-8"',
           '',
-          body,
+          sendMessageInput.body,
           '',
           `--${boundary}`,
           'Content-Type: text/html; charset="UTF-8"',
           '',
-          html,
+          sendMessageInput.html,
           '',
           `--${boundary}--`,
         );
@@ -103,12 +98,12 @@ export class MessagingSendMessageService {
           );
 
         const message = {
-          subject: subject,
+          subject: sendMessageInput.subject,
           body: {
             contentType: 'HTML',
-            content: html,
+            content: sendMessageInput.html,
           },
-          toRecipients: [{ emailAddress: { address: to } }],
+          toRecipients: [{ emailAddress: { address: sendMessageInput.to } }],
         };
 
         const response = await microsoftClient
@@ -142,22 +137,25 @@ export class MessagingSendMessageService {
         break;
       }
       case ConnectedAccountProvider.IMAP_SMTP_CALDAV: {
+        const { handle, connectionParameters, messageChannels } =
+          connectedAccount;
+
         const smtpClient =
           await this.smtpClientProvider.getSmtpClient(connectedAccount);
 
         const mail = new MailComposer({
           from: handle,
-          to,
-          subject,
-          text: body,
-          html,
+          to: sendMessageInput.to,
+          subject: sendMessageInput.subject,
+          text: sendMessageInput.body,
+          html: sendMessageInput.html,
         });
 
         const messageBuffer = await mail.compile().build();
 
         await smtpClient.sendMail({
           from: handle,
-          to,
+          to: sendMessageInput.to,
           raw: messageBuffer,
         });
 
@@ -184,8 +182,8 @@ export class MessagingSendMessageService {
       }
       default:
         assertUnreachable(
-          provider,
-          `Provider ${provider} not supported for sending messages`,
+          connectedAccount.provider,
+          `Provider ${connectedAccount.provider} not supported for sending messages`,
         );
     }
   }
