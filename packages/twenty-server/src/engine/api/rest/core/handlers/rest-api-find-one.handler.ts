@@ -61,22 +61,4 @@ export class RestApiFindOneHandler extends RestApiBaseHandler {
       },
     };
   }
-
-  private async buildCommonOptions(request: Request) {
-    const { object: parsedObject } = parseCorePath(request);
-
-    const { objectMetadataMaps, objectMetadataMapItem } =
-      await this.coreQueryBuilderFactory.getObjectMetadata(
-        request,
-        parsedObject,
-      );
-
-    const authContext = this.getAuthContextFromRequest(request);
-
-    return {
-      authContext: authContext,
-      objectMetadataItemWithFieldMaps: objectMetadataMapItem,
-      objectMetadataMaps: objectMetadataMaps,
-    };
-  }
 }

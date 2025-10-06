@@ -13,6 +13,7 @@ import { RestApiUpdateOneHandler } from 'src/engine/api/rest/core/handlers/rest-
 import { CoreQueryBuilderModule } from 'src/engine/api/rest/core/query-builder/core-query-builder.module';
 import { coreQueryBuilderFactories } from 'src/engine/api/rest/core/query-builder/factories/factories';
 import { RestApiCoreService } from 'src/engine/api/rest/core/services/rest-api-core.service';
+import { inputRequestParsers } from 'src/engine/api/rest/input-request-parsers/input-request-parsers';
 import { RestApiService } from 'src/engine/api/rest/rest-api.service';
 import { ActorModule } from 'src/engine/core-modules/actor/actor.module';
 import { ApiKeyModule } from 'src/engine/core-modules/api-key/api-key.module';
@@ -56,6 +57,7 @@ const restApiCoreResolvers = [
     RestApiService,
     RestApiCoreService,
     ...coreQueryBuilderFactories,
+    ...inputRequestParsers,
     ...restApiCoreResolvers,
   ],
 })

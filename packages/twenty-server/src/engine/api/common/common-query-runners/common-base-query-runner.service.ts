@@ -4,11 +4,10 @@ import { ObjectsPermissions } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
 
 import { WorkspaceAuthContext } from 'src/engine/api/common/interfaces/workspace-auth-context.interface';
-import { type ObjectRecord } from 'src/engine/api/graphql/workspace-query-builder/interfaces/object-record.interface';
-import { type IConnection } from 'src/engine/api/graphql/workspace-query-runner/interfaces/connection.interface';
-import { type IEdge } from 'src/engine/api/graphql/workspace-query-runner/interfaces/edge.interface';
+import { ObjectRecord } from 'src/engine/api/graphql/workspace-query-builder/interfaces/object-record.interface';
 
 import { CommonSelectedFieldsHandler } from 'src/engine/api/common/common-args-handlers/common-query-selected-fields/common-selected-fields.handler';
+import { CommonResultGettersService } from 'src/engine/api/common/common-result-getters/common-result-getters.service';
 import {
   CommonQueryNames,
   RawSelectedFields,
@@ -37,13 +36,7 @@ import { WorkspacePermissionsCacheService } from 'src/engine/metadata-modules/wo
 import { TwentyORMGlobalManager } from 'src/engine/twenty-orm/twenty-orm-global.manager';
 
 @Injectable()
-export abstract class CommonBaseQueryRunnerService<
-  Response extends
-    | ObjectRecord
-    | ObjectRecord[]
-    | IConnection<ObjectRecord, IEdge<ObjectRecord>>
-    | IConnection<ObjectRecord, IEdge<ObjectRecord>>[],
-> {
+export abstract class CommonBaseQueryRunnerService {
   @Inject()
   protected readonly workspaceQueryHookService: WorkspaceQueryHookService;
   @Inject()
@@ -64,6 +57,8 @@ export abstract class CommonBaseQueryRunnerService<
   protected readonly selectedFieldsHandler: CommonSelectedFieldsHandler;
   @Inject()
   protected readonly workspacePermissionsCacheService: WorkspacePermissionsCacheService;
+  @Inject()
+  protected readonly commonResultGettersService: CommonResultGettersService;
 
   public async prepareQueryRunnerContext({
     authContext,
@@ -146,18 +141,19 @@ export abstract class CommonBaseQueryRunnerService<
     objectMetadataItemWithFieldMaps,
     objectMetadataMaps,
   }: {
-    results: Response;
+    results: ObjectRecord[];
     operationName: CommonQueryNames;
     authContext: WorkspaceAuthContext;
     objectMetadataItemWithFieldMaps: ObjectMetadataItemWithFieldMaps;
     objectMetadataMaps: ObjectMetadataMaps;
-  }) {
-    const resultWithGetters = await this.queryResultGettersFactory.create(
-      results,
-      objectMetadataItemWithFieldMaps,
-      authContext.workspace.id,
-      objectMetadataMaps,
-    );
+  }): Promise<ObjectRecord[]> {
+    const resultWithGetters =
+      await this.commonResultGettersService.processQueryResult(
+        results,
+        objectMetadataItemWithFieldMaps.id,
+        objectMetadataMaps,
+        authContext.workspace.id,
+      );
 
     await this.workspaceQueryHookService.executePostQueryHooks(
       authContext,
@@ -166,7 +162,8 @@ export abstract class CommonBaseQueryRunnerService<
       resultWithGetters,
     );
 
-    return resultWithGetters;
+    //TODO: Refacto-common - improve commonResultGettersService typing
+    return resultWithGetters as ObjectRecord[];
   }
 
   private async validateSettingsPermissionsOnObjectOrThrow(

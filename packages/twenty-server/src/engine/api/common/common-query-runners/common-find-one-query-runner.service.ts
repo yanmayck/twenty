@@ -28,7 +28,7 @@ import { ObjectMetadataItemWithFieldMaps } from 'src/engine/metadata-modules/typ
 import { ObjectMetadataMaps } from 'src/engine/metadata-modules/types/object-metadata-maps';
 
 @Injectable()
-export class CommonFindOneQueryRunnerService extends CommonBaseQueryRunnerService<ObjectRecord> {
+export class CommonFindOneQueryRunnerService extends CommonBaseQueryRunnerService {
   async run({
     rawSelectedFields,
     args,
@@ -150,20 +150,22 @@ export class CommonFindOneQueryRunnerService extends CommonBaseQueryRunnerServic
     const typeORMObjectRecordsParser =
       new ObjectRecordsToGraphqlConnectionHelper(objectMetadataMaps);
 
-    const results = typeORMObjectRecordsParser.processRecord({
+    const result = typeORMObjectRecordsParser.processRecord({
       objectRecord: objectRecords[0],
       objectName: objectMetadataItemWithFieldMaps.nameSingular,
       take: 1,
       totalCount: 1,
     }) as ObjectRecord;
 
-    return this.enrichResultsWithGettersAndHooks({
-      results,
+    const enrichedResults = await this.enrichResultsWithGettersAndHooks({
+      results: [result],
       authContext,
       objectMetadataItemWithFieldMaps,
       objectMetadataMaps,
       operationName: CommonQueryNames.findOne,
     });
+
+    return enrichedResults[0];
   }
 
   async processQueryArgs({

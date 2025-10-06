@@ -1,6 +1,6 @@
 import { BadRequestException, Inject } from '@nestjs/common';
 
-import { type Request } from 'express';
+import { Request } from 'express';
 import chunk from 'lodash.chunk';
 import isEmpty from 'lodash.isempty';
 import {
@@ -11,6 +11,7 @@ import { capitalize, isDefined } from 'twenty-shared/utils';
 import { In, type ObjectLiteral } from 'typeorm';
 
 import {
+  ObjectRecordOrderBy,
   type ObjectRecord,
   type ObjectRecordFilter,
 } from 'src/engine/api/graphql/workspace-query-builder/interfaces/object-record.interface';
@@ -26,6 +27,8 @@ import {
   MAX_DEPTH,
   type Depth,
 } from 'src/engine/api/rest/input-factories/depth-input.factory';
+import { FilterRequestParser } from 'src/engine/api/rest/input-request-parsers/filter.request-parser';
+import { OrderByRequestParser } from 'src/engine/api/rest/input-request-parsers/order-by.request-parser';
 import { computeCursorArgFilter } from 'src/engine/api/utils/compute-cursor-arg-filter.utils';
 import { getAllSelectableFields } from 'src/engine/api/utils/get-all-selectable-fields.utils';
 import { CreatedByFromAuthContextService } from 'src/engine/core-modules/actor/services/created-by-from-auth-context.service';
@@ -101,6 +104,10 @@ export abstract class RestApiBaseHandler {
   protected readonly workspaceMetadataCacheService: WorkspaceMetadataCacheService;
   @Inject()
   protected readonly apiKeyRoleService: ApiKeyRoleService;
+  @Inject()
+  protected readonly orderByRequestParser: OrderByRequestParser;
+  @Inject()
+  protected readonly filterRequestParser: FilterRequestParser;
 
   protected abstract handle(
     request: Request,
@@ -549,4 +556,33 @@ export abstract class RestApiBaseHandler {
       throw new BadRequestException(`Invalid cursor: ${cursor}`);
     }
   };
+
+  async buildCommonOptions(request: Request) {
+    const { object: parsedObject } = parseCorePath(request);
+
+    const { objectMetadataMaps, objectMetadataMapItem } =
+      await this.coreQueryBuilderFactory.getObjectMetadata(
+        request,
+        parsedObject,
+      );
+
+    const authContext = this.getAuthContextFromRequest(request);
+
+    return {
+      authContext: authContext,
+      objectMetadataItemWithFieldMaps: objectMetadataMapItem,
+      objectMetadataMaps: objectMetadataMaps,
+    };
+  }
+
+  getStartAndEndCursor(records: ObjectRecord[], orderBy: ObjectRecordOrderBy) {
+    const startCursor =
+      records.length > 0 ? encodeCursor(records[0], orderBy) : null;
+    const endCursor =
+      records.length > 0
+        ? encodeCursor(records[records.length - 1], orderBy)
+        : null;
+
+    return { startCursor, endCursor };
+  }
 }
