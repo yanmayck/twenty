@@ -42,7 +42,8 @@ export const TabListMeasurements = () => {
       {visibleTabs.map((tab) => (
         <NodeDimension
           key={tab.id}
-          onDimensionChange={onTabWidthChange(tab.id)}
+          id={tab.id}
+          onDimensionChange={onTabWidthChange}
         >
           <TabButton
             id={tab.id}

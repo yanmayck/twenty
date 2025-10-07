@@ -28,7 +28,7 @@ export type TabListContextValue = {
   onTabSelect: (tabId: string) => void;
   onTabSelectFromDropdown: (tabId: string) => void;
   onContainerWidthChange: (dimensions: TablistDimensions) => void;
-  onTabWidthChange: (tabId: string) => (dimensions: TablistDimensions) => void;
+  onTabWidthChange: (dimensions: TablistDimensions, tabId?: string) => void;
   onMoreButtonWidthChange: (dimensions: TablistDimensions) => void;
   onAddButtonWidthChange: (dimensions: TablistDimensions) => void;
   isDragAndDropEnabled: boolean;
