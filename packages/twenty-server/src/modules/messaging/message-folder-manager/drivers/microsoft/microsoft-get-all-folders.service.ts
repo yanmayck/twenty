@@ -1,5 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 
+import { isDefined } from 'twenty-shared/utils';
+
 import {
   MessageFolder,
   MessageFolderDriver,
@@ -10,11 +12,6 @@ import { MicrosoftClientProvider } from 'src/modules/messaging/message-import-ma
 import { MicrosoftHandleErrorService } from 'src/modules/messaging/message-import-manager/drivers/microsoft/services/microsoft-handle-error.service';
 import { StandardFolder } from 'src/modules/messaging/message-import-manager/drivers/types/standard-folder';
 import { getStandardFolderByRegex } from 'src/modules/messaging/message-import-manager/drivers/utils/get-standard-folder-by-regex';
-
-type MicrosoftGraphFolder = {
-  id: string;
-  displayName: string;
-};
 
 @Injectable()
 export class MicrosoftGetAllFoldersService implements MessageFolderDriver {
@@ -32,25 +29,16 @@ export class MicrosoftGetAllFoldersService implements MessageFolderDriver {
     >,
   ): Promise<MessageFolder[]> {
     try {
-      const microsoftClient =
+      const { client } =
         await this.microsoftClientProvider.getMicrosoftClient(connectedAccount);
 
-      const response = await microsoftClient
-        .api('/me/mailFolders')
-        .get()
-        .catch((error) => {
-          this.logger.error(
-            `Connected account ${connectedAccount.id}: Error fetching folders: ${error.message}`,
-          );
-          this.microsoftHandleErrorService.handleMicrosoftGetMessageListError(
-            error,
-          );
-
-          return { value: [] };
-        });
-
-      const folders = (response.value as MicrosoftGraphFolder[]) || [];
+      const response = await client.me.mailFolders.get();
+      const folders = response?.value;
       const folderInfos: MessageFolder[] = [];
+
+      if (!isDefined(folders)) {
+        return [];
+      }
 
       for (const folder of folders) {
         if (!folder.displayName) {
@@ -67,7 +55,7 @@ export class MicrosoftGetAllFoldersService implements MessageFolderDriver {
         const isSentFolder = this.isSentFolder(standardFolder);
 
         folderInfos.push({
-          externalId: folder.id,
+          externalId: folder.id!,
           name: folder.displayName,
           isSynced: isInbox || isSentFolder,
           isSentFolder,
@@ -80,6 +68,9 @@ export class MicrosoftGetAllFoldersService implements MessageFolderDriver {
 
       return folderInfos;
     } catch (error) {
+      this.microsoftHandleErrorService.handleMicrosoftGetMessageListError(
+        error,
+      );
       this.logger.error(
         `Failed to get Microsoft folders for account ${connectedAccount.handle}:`,
         error,

@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 
+import { BatchRequestContent } from '@microsoft/msgraph-sdk-core';
+
+import { Message } from 'src/modules/connected-account/oauth2-client-manager/drivers/microsoft/microsoft-graph-client/models';
 import { type ConnectedAccountWorkspaceEntity } from 'src/modules/connected-account/standard-objects/connected-account.workspace-entity';
 import { MicrosoftClientProvider } from 'src/modules/messaging/message-import-manager/drivers/microsoft/providers/microsoft-client.provider';
-import { type MicrosoftGraphBatchResponse } from 'src/modules/messaging/message-import-manager/drivers/microsoft/services/microsoft-get-messages.interface';
 
 @Injectable()
 export class MicrosoftFetchByBatchService {
@@ -18,35 +20,41 @@ export class MicrosoftFetchByBatchService {
     >,
   ): Promise<{
     messageIdsByBatch: string[][];
-    batchResponses: MicrosoftGraphBatchResponse[];
+    batchResponses: Message[];
   }> {
     const batchLimit = 20;
-    const batchResponses: MicrosoftGraphBatchResponse[] = [];
+    const batchResponses: Message[] = [];
     const messageIdsByBatch: string[][] = [];
 
-    const client =
+    const { client, adapter } =
       await this.microsoftClientProvider.getMicrosoftClient(connectedAccount);
 
     for (let i = 0; i < messageIds.length; i += batchLimit) {
       const batchMessageIds = messageIds.slice(i, i + batchLimit);
+      const batchRequestContent = new BatchRequestContent(adapter, {});
 
-      messageIdsByBatch.push(batchMessageIds);
+      for (const messageId of batchMessageIds) {
+        const requestInfo = client.me.messages
+          .byMessageId(messageId)
+          .content.toGetRequestInformation();
 
-      const batchRequests = batchMessageIds.map((messageId, index) => ({
-        id: (index + 1).toString(),
-        method: 'GET',
-        url: `/me/messages/${messageId}`,
-        headers: {
-          'Content-Type': 'application/json',
-          Prefer: 'outlook.body-content-type="text"',
-        },
-      }));
+        batchRequestContent.addBatchRequest(requestInfo);
+      }
 
-      const batchResponse = await client
-        .api('/$batch')
-        .post({ requests: batchRequests });
+      const batchResponse = await batchRequestContent.postAsync();
 
-      batchResponses.push(batchResponse);
+      if (batchResponse) {
+        const responses = batchResponse.getResponses();
+
+        for (const [_id, response] of responses) {
+          if (response.status === 200 && response.body) {
+            const decoder = new TextDecoder('utf-8');
+            const mimeContent = JSON.parse(decoder.decode(response.body));
+
+            batchResponses.push(mimeContent as Message);
+          }
+        }
+      }
     }
 
     return {

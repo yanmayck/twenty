@@ -51,6 +51,7 @@
     "@microsoft/kiota-serialization-text": "^1.0.0-preview.99",
     "@microsoft/microsoft-graph-client": "3.0.7",
     "@microsoft/microsoft-graph-types": "^2.40.0",
+    "@microsoft/msgraph-sdk-core": "^1.0.0-preview.17",
     "@nestjs/axios": "3.0.2",
     "@nestjs/cache-manager": "^2.2.1",
     "@nestjs/common": "9.4.3",

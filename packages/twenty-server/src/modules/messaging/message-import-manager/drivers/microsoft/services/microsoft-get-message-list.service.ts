@@ -1,12 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 
-import {
-  PageIterator,
-  type PageCollection,
-  type PageIteratorCallback,
-} from '@microsoft/microsoft-graph-client';
-import { isNonEmptyString } from '@sniptt/guards';
+import { isDefined } from 'twenty-shared/utils';
 
+import { type BaseDeltaFunctionResponse } from 'src/modules/connected-account/oauth2-client-manager/drivers/microsoft/microsoft-graph-client/models';
 import { type ConnectedAccountWorkspaceEntity } from 'src/modules/connected-account/standard-objects/connected-account.workspace-entity';
 import { type MessageFolderWorkspaceEntity } from 'src/modules/messaging/common/standard-objects/message-folder.workspace-entity';
 import {
@@ -72,70 +68,78 @@ export class MicrosoftGetMessageListService {
     const messageExternalIds: string[] = [];
     const messageExternalIdsToDelete: string[] = [];
 
-    const microsoftClient =
-      await this.microsoftClientProvider.getMicrosoftClient(connectedAccount);
+    try {
+      const { client } =
+        await this.microsoftClientProvider.getMicrosoftClient(connectedAccount);
 
-    const folderId = messageFolder.externalId || messageFolder.name;
-    const apiUrl = isNonEmptyString(messageFolder.syncCursor)
-      ? messageFolder.syncCursor
-      : `/me/mailfolders/${folderId}/messages/delta?$select=id`;
+      const syncCursor = messageFolder.syncCursor;
+      const folderId = messageFolder.externalId;
 
-    const response: PageCollection = await microsoftClient
-      .api(apiUrl)
-      .version('beta')
-      .headers({
-        Prefer: `odata.maxpagesize=${MESSAGING_MICROSOFT_USERS_MESSAGES_LIST_MAX_RESULT}, IdType="ImmutableId"`,
-      })
-      .get()
-      .catch((error) => {
-        this.logger.error(
-          `Connected account ${connectedAccount.id}: Error fetching message list: ${JSON.stringify(error)}`,
-        );
-        if (isAccessTokenRefreshingError(error?.body)) {
-          throw new MessageImportDriverException(
-            error.message,
-            MessageImportDriverExceptionCode.CLIENT_NOT_AVAILABLE,
-          );
-        }
-        this.microsoftHandleErrorService.handleMicrosoftGetMessageListError(
-          error,
-        );
-      });
-
-    const callback: PageIteratorCallback = (data) => {
-      if (data['@removed']) {
-        messageExternalIdsToDelete.push(data.id);
-      } else {
-        messageExternalIds.push(data.id);
+      if (!isDefined(folderId)) {
+        throw new Error('');
       }
 
-      return true;
-    };
+      const deltaBuilder = syncCursor
+        ? client.me.messages.delta.withUrl(syncCursor)
+        : client.me.mailFolders.byMailFolderId(folderId).messages.delta;
 
-    const pageIterator = new PageIterator(microsoftClient, response, callback, {
-      headers: {
-        Prefer: `odata.maxpagesize=${MESSAGING_MICROSOFT_USERS_MESSAGES_LIST_MAX_RESULT}, IdType="ImmutableId"`,
-      },
-    });
+      let nextLink: string | undefined | null;
+      let deltaLink: string | undefined | null;
 
-    await pageIterator.iterate().catch((error) => {
-      if (isAccessTokenRefreshingError(error?.body)) {
+      do {
+        const response = nextLink
+          ? await client.me.messages.withUrl(nextLink).get()
+          : await deltaBuilder.get({
+              queryParameters: {
+                select: ['id'],
+                top: MESSAGING_MICROSOFT_USERS_MESSAGES_LIST_MAX_RESULT,
+              },
+            });
+
+        response?.value?.forEach((message) => {
+          if (message.id) {
+            if (
+              message.additionalData &&
+              '@removed' in message.additionalData
+            ) {
+              messageExternalIdsToDelete.push(message.id);
+            } else {
+              messageExternalIds.push(message.id);
+            }
+          }
+        });
+
+        nextLink = response?.odataNextLink;
+        const deltaResponse = response as BaseDeltaFunctionResponse;
+
+        if (deltaResponse?.odataDeltaLink) {
+          deltaLink = deltaResponse.odataDeltaLink;
+        }
+      } while (nextLink);
+
+      return {
+        messageExternalIds,
+        messageExternalIdsToDelete,
+        previousSyncCursor: syncCursor,
+        nextSyncCursor: deltaLink || '',
+        folderId: undefined,
+      };
+    } catch (error) {
+      this.logger.error(
+        `Connected account ${connectedAccount.id}: Error fetching message list: ${error instanceof Error ? error.message : String(error)}`,
+      );
+
+      if (isAccessTokenRefreshingError(error)) {
         throw new MessageImportDriverException(
-          error.message,
+          error instanceof Error ? error.message : String(error),
           MessageImportDriverExceptionCode.CLIENT_NOT_AVAILABLE,
         );
       }
       this.microsoftHandleErrorService.handleMicrosoftGetMessageListError(
         error,
       );
-    });
 
-    return {
-      messageExternalIds,
-      messageExternalIdsToDelete,
-      previousSyncCursor: messageFolder.syncCursor,
-      nextSyncCursor: pageIterator.getDeltaLink() || '',
-      folderId: undefined,
-    };
+      throw error;
+    }
   }
 }

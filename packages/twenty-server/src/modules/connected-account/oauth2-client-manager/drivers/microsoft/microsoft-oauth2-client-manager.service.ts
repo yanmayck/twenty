@@ -32,9 +32,10 @@ export class MicrosoftOAuth2ClientManagerService {
     });
   }
 
-  public async getOAuth2Client(
-    refreshToken: string,
-  ): Promise<MicrosoftGraphClient> {
+  public async getOAuth2Client(refreshToken: string): Promise<{
+    client: MicrosoftGraphClient;
+    adapter: FetchRequestAdapter;
+  }> {
     const tokenCredential: TokenCredential = {
       getToken: async (
         scopes: string | string[],
@@ -75,6 +76,9 @@ export class MicrosoftOAuth2ClientManagerService {
     const requestAdapter = new FetchRequestAdapter(authProvider);
     const client = createMicrosoftGraphClient(requestAdapter);
 
-    return client;
+    return {
+      client,
+      adapter: requestAdapter,
+    };
   }
 }

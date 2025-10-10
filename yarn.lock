@@ -2025,7 +2025,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@azure/core-auth@npm:^1.5.0":
+"@azure/core-auth@npm:^1.5.0, @azure/core-auth@npm:^1.9.0":
   version: 1.10.1
   resolution: "@azure/core-auth@npm:1.10.1"
   dependencies:
@@ -9277,7 +9277,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@microsoft/kiota-authentication-azure@npm:^1.0.0-preview.99":
+"@microsoft/kiota-authentication-azure@npm:^1.0.0-preview.82, @microsoft/kiota-authentication-azure@npm:^1.0.0-preview.99":
   version: 1.0.0-preview.99
   resolution: "@microsoft/kiota-authentication-azure@npm:1.0.0-preview.99"
   dependencies:
@@ -9286,6 +9286,20 @@ __metadata:
     "@opentelemetry/api": "npm:^1.7.0"
     tslib: "npm:^2.6.2"
   checksum: 10c0/821c406554929a2b355d407d378813ca1d2b27760559313e852d5c71f68cb838ccaba8dc7e992c548cbef86b75818f4cee10f20a06bbaf7acb8dd005e76babda
+  languageName: node
+  linkType: hard
+
+"@microsoft/kiota-bundle@npm:^1.0.0-preview.82":
+  version: 1.0.0-preview.99
+  resolution: "@microsoft/kiota-bundle@npm:1.0.0-preview.99"
+  dependencies:
+    "@microsoft/kiota-abstractions": "npm:^1.0.0-preview.99"
+    "@microsoft/kiota-http-fetchlibrary": "npm:^1.0.0-preview.99"
+    "@microsoft/kiota-serialization-form": "npm:^1.0.0-preview.99"
+    "@microsoft/kiota-serialization-json": "npm:^1.0.0-preview.99"
+    "@microsoft/kiota-serialization-multipart": "npm:^1.0.0-preview.99"
+    "@microsoft/kiota-serialization-text": "npm:^1.0.0-preview.99"
+  checksum: 10c0/3df57dbef2fa95764d78393cbb81c55e6a53e6348f390ca693f02e4c4b3847801fb7cbdc7131903b504e288db0a65d04e7d614e4d9bebff95feb6aba7cd0ebcf
   languageName: node
   linkType: hard
 
@@ -9363,6 +9377,18 @@ __metadata:
   version: 2.40.0
   resolution: "@microsoft/microsoft-graph-types@npm:2.40.0"
   checksum: 10c0/c6f69a0fe136579d735efafc1375e4540e01d34ea488d987a9b651f7206c40c76991fff56df31e8b2593f16846bd748d0ffcf249d1f2629bb0298e6214fe2fdc
+  languageName: node
+  linkType: hard
+
+"@microsoft/msgraph-sdk-core@npm:^1.0.0-preview.17":
+  version: 1.0.0-preview.17
+  resolution: "@microsoft/msgraph-sdk-core@npm:1.0.0-preview.17"
+  dependencies:
+    "@azure/core-auth": "npm:^1.9.0"
+    "@microsoft/kiota-authentication-azure": "npm:^1.0.0-preview.82"
+    "@microsoft/kiota-bundle": "npm:^1.0.0-preview.82"
+    tslib: "npm:^2.6.2"
+  checksum: 10c0/6d8c37f0c517671a05129f2bf88964bb2339f9de9a9e1aa7d8aa10b3bef097445792f343130ccae66ca8407d9926a27e22e55280dccdd6c2269d871af87465bd
   languageName: node
   linkType: hard
 
@@ -53156,6 +53182,7 @@ __metadata:
     "@microsoft/kiota-serialization-text": "npm:^1.0.0-preview.99"
     "@microsoft/microsoft-graph-client": "npm:3.0.7"
     "@microsoft/microsoft-graph-types": "npm:^2.40.0"
+    "@microsoft/msgraph-sdk-core": "npm:^1.0.0-preview.17"
     "@nestjs/axios": "npm:3.0.2"
     "@nestjs/cache-manager": "npm:^2.2.1"
     "@nestjs/cli": "npm:10.3.0"

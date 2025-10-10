@@ -3,11 +3,10 @@ import { Injectable, Logger } from '@nestjs/common';
 import { type EmailAddress } from 'addressparser';
 import { isDefined } from 'twenty-shared/utils';
 
+import { Message } from 'src/modules/connected-account/oauth2-client-manager/drivers/microsoft/microsoft-graph-client/models';
 import { type ConnectedAccountWorkspaceEntity } from 'src/modules/connected-account/standard-objects/connected-account.workspace-entity';
 import { MessageDirection } from 'src/modules/messaging/common/enums/message-direction.enum';
 import { computeMessageDirection } from 'src/modules/messaging/message-import-manager/drivers/gmail/utils/compute-message-direction.util';
-import { MicrosoftImportDriverException } from 'src/modules/messaging/message-import-manager/drivers/microsoft/exceptions/microsoft-import-driver.exception';
-import { type MicrosoftGraphBatchResponse } from 'src/modules/messaging/message-import-manager/drivers/microsoft/services/microsoft-get-messages.interface';
 import { type MessageWithParticipants } from 'src/modules/messaging/message-import-manager/types/message';
 import { formatAddressObjectAsParticipants } from 'src/modules/messaging/message-import-manager/utils/format-address-object-as-participants.util';
 import { safeParseEmailAddress } from 'src/modules/messaging/message-import-manager/utils/safe-parse.util';
@@ -54,32 +53,17 @@ export class MicrosoftGetMessagesService {
   }
 
   public formatBatchResponsesAsMessages(
-    batchResponses: MicrosoftGraphBatchResponse[],
+    batchResponses: Message[],
     connectedAccount: ConnectedAccountType,
   ): MessageWithParticipants[] {
-    return batchResponses.flatMap((batchResponse) => {
-      return this.formatBatchResponseAsMessages(
-        batchResponse,
-        connectedAccount,
-      );
-    });
+    return this.formatBatchResponseAsMessages(batchResponses, connectedAccount);
   }
 
   private formatBatchResponseAsMessages(
-    batchResponse: MicrosoftGraphBatchResponse,
+    batchResponse: Message[],
     connectedAccount: ConnectedAccountType,
   ): MessageWithParticipants[] {
-    const parsedResponses = this.parseBatchResponse(batchResponse);
-
-    const messages = parsedResponses.map((response) => {
-      if ('error' in response) {
-        throw new MicrosoftImportDriverException(
-          response.error.message,
-          response.error.code,
-          response.error.statusCode,
-        );
-      }
-
+    const messages = batchResponse.map((response) => {
       const safeParseFrom = response?.from?.emailAddress
         ? [safeParseEmailAddress(response.from.emailAddress)]
         : [];
@@ -137,36 +121,5 @@ export class MicrosoftGetMessagesService {
     });
 
     return messages.filter(isDefined);
-  }
-
-  private parseBatchResponse(batchResponse: MicrosoftGraphBatchResponse) {
-    if (!batchResponse?.responses) {
-      return [];
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return batchResponse.responses.map((response: any) => {
-      if (response.status === 200) {
-        return response.body;
-      }
-
-      if (response.status !== 503 && response.status !== 429) {
-        this.logger.error(`Microsoft parseBatchResponse error`, response);
-      }
-
-      const errorParsed = response?.body?.error
-        ? response.body.error
-        : {
-            message:
-              'Microsoft parseBatchResponse error: no response.body.error',
-          };
-
-      return {
-        error: {
-          ...errorParsed,
-          statusCode: response?.status,
-        },
-      };
-    });
   }
 }
