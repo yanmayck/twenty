@@ -25,7 +25,7 @@ export class MicrosoftEmailAliasManagerService {
     const response = await client.me
       .get({
         queryParameters: {
-          select: ['],
+          select: ['proxyAddresses'],
         },
       })
       .catch((error) => {
