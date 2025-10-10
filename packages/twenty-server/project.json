@@ -288,7 +288,7 @@
           "command -v dotnet >/dev/null 2>&1 || brew install dotnet",
           "dotnet tool install --global Microsoft.OpenApi.Kiota 2>/dev/null || true",
           "$HOME/.dotnet/tools/kiota download github::microsoftgraph/msgraph-metadata/graph.microsoft.com/v1.0 -o src/modules/connected-account/oauth2-client-manager/drivers/microsoft/microsoft-graph-client/graph.json --clean-output",
-          "$HOME/.dotnet/tools/kiota generate -l typescript -d src/modules/connected-account/oauth2-client-manager/drivers/microsoft/microsoft-graph-client/graph.json -c MicrosoftGraphClient -o src/modules/connected-account/oauth2-client-manager/drivers/microsoft/microsoft-graph-client --include-path \"/me/mailFolders\" --include-path \"/me/mailFolders/**\" --include-path \"/me/messages\" --include-path \"/me/messages/**\" --include-path \"/me/events\" --include-path \"/me/events/**\""
+          "$HOME/.dotnet/tools/kiota generate -l typescript -d src/modules/connected-account/oauth2-client-manager/drivers/microsoft/microsoft-graph-client/graph.json -c MicrosoftGraphClient -o src/modules/connected-account/oauth2-client-manager/drivers/microsoft/microsoft-graph-client --include-path \"/me\" --include-path \"/me/mailFolders\" --include-path \"/me/mailFolders/**\" --include-path \"/me/messages\" --include-path \"/me/messages/**\" --include-path \"/me/events\" --include-path \"/me/events/**\""
         ]
       }
     }

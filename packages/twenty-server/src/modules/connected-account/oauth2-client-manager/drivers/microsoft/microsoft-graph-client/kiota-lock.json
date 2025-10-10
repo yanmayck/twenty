@@ -1,5 +1,5 @@
 {
-  "descriptionHash": "694ACD29A79182A533C7C304701D3F9B4E5A69B00EE77195EB0B04CC8E5C0CBC5526B9B0021AAE3F9A92A4D434D8056CF0A62CDCED90417A8C44BF8CC78BA4E6",
+  "descriptionHash": "AFBBD3A2D3F700397C3E3833ED12BB50FF774D991B86E49E3F2E39CA338A5954303C756E41C49A1AF88FF443470FE762AC3E938C70CD1BBBB5434D6914240ABB",
   "descriptionLocation": "graph.json",
   "lockFileVersion": "1.0.0",
   "kiotaVersion": "1.28.0",
@@ -29,6 +29,7 @@
     "multipart/form-data;q=0.1"
   ],
   "includePatterns": [
+    "/me",
     "/me/mailFolders",
     "/me/mailFolders/**",
     "/me/messages",
