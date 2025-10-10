@@ -1,12 +1,16 @@
 import { Injectable, Logger } from '@nestjs/common';
 
-import {
-  type AuthProvider,
-  type AuthProviderCallback,
-  Client,
-} from '@microsoft/microsoft-graph-client';
+import { ConfidentialClientApplication } from '@azure/msal-node';
+import { AzureIdentityAuthenticationProvider } from '@microsoft/kiota-authentication-azure';
+import { FetchRequestAdapter } from '@microsoft/kiota-http-fetchlibrary';
+
+import type { AccessToken, TokenCredential } from '@azure/core-auth';
 
 import { TwentyConfigService } from 'src/engine/core-modules/twenty-config/twenty-config.service';
+import {
+  createMicrosoftGraphClient,
+  type MicrosoftGraphClient,
+} from 'src/modules/connected-account/oauth2-client-manager/drivers/microsoft/microsoft-graph-client/microsoftGraphClient';
 import { ConnectedAccountRefreshAccessTokenExceptionCode } from 'src/modules/connected-account/refresh-tokens-manager/exceptions/connected-account-refresh-tokens.exception';
 
 @Injectable()
@@ -14,66 +18,62 @@ export class MicrosoftOAuth2ClientManagerService {
   private readonly logger = new Logger(
     MicrosoftOAuth2ClientManagerService.name,
   );
-  constructor(private readonly twentyConfigService: TwentyConfigService) {}
+  private msalClient: ConfidentialClientApplication;
 
-  public async getOAuth2Client(refreshToken: string): Promise<Client> {
-    const authProvider: AuthProvider = async (
-      callback: AuthProviderCallback,
-    ) => {
-      try {
-        const urlData = new URLSearchParams();
+  constructor(private readonly twentyConfigService: TwentyConfigService) {
+    this.msalClient = new ConfidentialClientApplication({
+      auth: {
+        clientId: this.twentyConfigService.get('AUTH_MICROSOFT_CLIENT_ID'),
+        clientSecret: this.twentyConfigService.get(
+          'AUTH_MICROSOFT_CLIENT_SECRET',
+        ),
+        authority: 'https://login.microsoftonline.com/common',
+      },
+    });
+  }
 
-        urlData.append(
-          'client_id',
-          this.twentyConfigService.get('AUTH_MICROSOFT_CLIENT_ID'),
-        );
-        urlData.append('scope', 'https://graph.microsoft.com/.default');
-        urlData.append('refresh_token', refreshToken);
-        urlData.append(
-          'client_secret',
-          this.twentyConfigService.get('AUTH_MICROSOFT_CLIENT_SECRET'),
-        );
-        urlData.append('grant_type', 'refresh_token');
+  public async getOAuth2Client(
+    refreshToken: string,
+  ): Promise<MicrosoftGraphClient> {
+    const tokenCredential: TokenCredential = {
+      getToken: async (
+        scopes: string | string[],
+      ): Promise<AccessToken | null> => {
+        try {
+          const scopesArray = Array.isArray(scopes) ? scopes : [scopes];
 
-        const res = await fetch(
-          `https://login.microsoftonline.com/common/oauth2/v2.0/token`,
-          {
-            method: 'POST',
-            body: urlData,
-          },
-        );
+          const response = await this.msalClient.acquireTokenByRefreshToken({
+            refreshToken,
+            scopes: scopesArray,
+          });
 
-        const data = await res.json();
-
-        if (!res.ok) {
-          if (data) {
-            const accessTokenSliced = data?.access_token?.slice(0, 10);
-            const refreshTokenSliced = data?.refresh_token?.slice(0, 10);
-
-            delete data.access_token;
-            delete data.refresh_token;
-            this.logger.error(data);
-            this.logger.error(`accessTokenSliced: ${accessTokenSliced}`);
-            this.logger.error(`refreshTokenSliced: ${refreshTokenSliced}`);
+          if (!response || !response.accessToken) {
+            this.logger.error('Failed to acquire access token');
+            throw new Error(
+              `${MicrosoftOAuth2ClientManagerService.name} error: ${ConnectedAccountRefreshAccessTokenExceptionCode.REFRESH_ACCESS_TOKEN_FAILED}`,
+            );
           }
 
-          this.logger.error(res);
-          throw new Error(
-            `${MicrosoftOAuth2ClientManagerService.name} error: ${ConnectedAccountRefreshAccessTokenExceptionCode.REFRESH_ACCESS_TOKEN_FAILED}`,
+          return {
+            token: response.accessToken,
+            expiresOnTimestamp: response.expiresOn?.getTime() ?? 0,
+          };
+        } catch (error) {
+          this.logger.error(
+            `Failed to refresh token: ${error instanceof Error ? error.message : String(error)}`,
           );
+          throw error;
         }
-
-        callback(null, data.access_token);
-      } catch (error) {
-        callback(error, null);
-      }
+      },
     };
 
-    const client = Client.init({
-      defaultVersion: 'v1.0',
-      debugLogging: false,
-      authProvider: authProvider,
-    });
+    const authProvider = new AzureIdentityAuthenticationProvider(
+      tokenCredential,
+      ['https://graph.microsoft.com/.default'],
+    );
+
+    const requestAdapter = new FetchRequestAdapter(authProvider);
+    const client = createMicrosoftGraphClient(requestAdapter);
 
     return client;
   }

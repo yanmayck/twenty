@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { type Client } from '@microsoft/microsoft-graph-client';
-
+import { type MicrosoftGraphClient } from 'src/modules/connected-account/oauth2-client-manager/drivers/microsoft/microsoft-graph-client/microsoftGraphClient';
 import { MicrosoftOAuth2ClientManagerService } from 'src/modules/connected-account/oauth2-client-manager/drivers/microsoft/microsoft-oauth2-client-manager.service';
 import { type ConnectedAccountWorkspaceEntity } from 'src/modules/connected-account/standard-objects/connected-account.workspace-entity';
 
@@ -16,7 +15,7 @@ export class MicrosoftClientProvider {
       ConnectedAccountWorkspaceEntity,
       'refreshToken' | 'id'
     >,
-  ): Promise<Client> {
+  ): Promise<MicrosoftGraphClient> {
     return await this.microsoftOAuth2ClientManagerService.getOAuth2Client(
       connectedAccount.refreshToken,
     );
