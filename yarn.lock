@@ -2016,6 +2016,37 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@azure/abort-controller@npm:^2.1.2":
+  version: 2.1.2
+  resolution: "@azure/abort-controller@npm:2.1.2"
+  dependencies:
+    tslib: "npm:^2.6.2"
+  checksum: 10c0/3771b6820e33ebb56e79c7c68e2288296b8c2529556fbd29cf4cf2fbff7776e7ce1120072972d8df9f1bf50e2c3224d71a7565362b589595563f710b8c3d7b79
+  languageName: node
+  linkType: hard
+
+"@azure/core-auth@npm:^1.5.0":
+  version: 1.10.1
+  resolution: "@azure/core-auth@npm:1.10.1"
+  dependencies:
+    "@azure/abort-controller": "npm:^2.1.2"
+    "@azure/core-util": "npm:^1.13.0"
+    tslib: "npm:^2.6.2"
+  checksum: 10c0/83fd96e43cf8ca3e1cf6c7677915ca1433d6e331cb7352b64a3f93d9fd71dcddf77e8b46f2bb2a5db49ce87016ed30ebaca88034a0acf321e86ba17c0eb3329e
+  languageName: node
+  linkType: hard
+
+"@azure/core-util@npm:^1.13.0":
+  version: 1.13.1
+  resolution: "@azure/core-util@npm:1.13.1"
+  dependencies:
+    "@azure/abort-controller": "npm:^2.1.2"
+    "@typespec/ts-http-runtime": "npm:^0.3.0"
+    tslib: "npm:^2.6.2"
+  checksum: 10c0/37067621cdac933c51775c26648fdcea315f07b08bd875cff4610e403eabf9c12532525f0bf094e258dadc03a55d35f12c9242f662526847b32c85cdcc2d6603
+  languageName: node
+  linkType: hard
+
 "@babel/code-frame@npm:^7.0.0, @babel/code-frame@npm:^7.10.4, @babel/code-frame@npm:^7.12.13, @babel/code-frame@npm:^7.16.7, @babel/code-frame@npm:^7.24.7, @babel/code-frame@npm:^7.27.1":
   version: 7.27.1
   resolution: "@babel/code-frame@npm:7.27.1"
@@ -9216,6 +9247,81 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@microsoft/kiota-abstractions@npm:^1.0.0-preview.99":
+  version: 1.0.0-preview.99
+  resolution: "@microsoft/kiota-abstractions@npm:1.0.0-preview.99"
+  dependencies:
+    "@opentelemetry/api": "npm:^1.7.0"
+    "@std-uritemplate/std-uritemplate": "npm:^2.0.0"
+    tinyduration: "npm:^3.3.0"
+    tslib: "npm:^2.6.2"
+  checksum: 10c0/8a8f342fec9e681c30bfc24f3d55f9f8de8182c5baead67295a8d134b8259ef140d8dadb1d7edcbb1459a8b15de512aa79bc7f83f113cb77fc23de46a1e201e0
+  languageName: node
+  linkType: hard
+
+"@microsoft/kiota-authentication-azure@npm:^1.0.0-preview.99":
+  version: 1.0.0-preview.99
+  resolution: "@microsoft/kiota-authentication-azure@npm:1.0.0-preview.99"
+  dependencies:
+    "@azure/core-auth": "npm:^1.5.0"
+    "@microsoft/kiota-abstractions": "npm:^1.0.0-preview.99"
+    "@opentelemetry/api": "npm:^1.7.0"
+    tslib: "npm:^2.6.2"
+  checksum: 10c0/821c406554929a2b355d407d378813ca1d2b27760559313e852d5c71f68cb838ccaba8dc7e992c548cbef86b75818f4cee10f20a06bbaf7acb8dd005e76babda
+  languageName: node
+  linkType: hard
+
+"@microsoft/kiota-http-fetchlibrary@npm:^1.0.0-preview.99":
+  version: 1.0.0-preview.99
+  resolution: "@microsoft/kiota-http-fetchlibrary@npm:1.0.0-preview.99"
+  dependencies:
+    "@microsoft/kiota-abstractions": "npm:^1.0.0-preview.99"
+    "@opentelemetry/api": "npm:^1.7.0"
+    tslib: "npm:^2.6.2"
+  checksum: 10c0/610f264976fc82a8d2dbda203f876f204a5a037db176b86e51307fc4c272de1f62ef6f6daf0bb45b3a3a7f335a41305950cf2cd1f86524da10597b745fd21a17
+  languageName: node
+  linkType: hard
+
+"@microsoft/kiota-serialization-form@npm:^1.0.0-preview.99":
+  version: 1.0.0-preview.99
+  resolution: "@microsoft/kiota-serialization-form@npm:1.0.0-preview.99"
+  dependencies:
+    "@microsoft/kiota-abstractions": "npm:^1.0.0-preview.99"
+    tslib: "npm:^2.6.2"
+  checksum: 10c0/2f921949c2dcc292c78244725d4fbb308e00ae553009aa920e15c378fcad97fa0b60d9c0e64cbcefbf2051deb5a48561295c06d7499464bfdc8d8075ca81c908
+  languageName: node
+  linkType: hard
+
+"@microsoft/kiota-serialization-json@npm:^1.0.0-preview.99":
+  version: 1.0.0-preview.99
+  resolution: "@microsoft/kiota-serialization-json@npm:1.0.0-preview.99"
+  dependencies:
+    "@microsoft/kiota-abstractions": "npm:^1.0.0-preview.99"
+    tslib: "npm:^2.6.2"
+  checksum: 10c0/e844537a5472d536a87ce1ba089759de0cf64f62fa52bf586129240eee43b1cdbf822ef30baed4503cdd6174c3ac93fb4d9ae66219438ae357d122ff5d77d4b5
+  languageName: node
+  linkType: hard
+
+"@microsoft/kiota-serialization-multipart@npm:^1.0.0-preview.99":
+  version: 1.0.0-preview.99
+  resolution: "@microsoft/kiota-serialization-multipart@npm:1.0.0-preview.99"
+  dependencies:
+    "@microsoft/kiota-abstractions": "npm:^1.0.0-preview.99"
+    tslib: "npm:^2.6.2"
+  checksum: 10c0/211f662b1b6d374facff842b7ea25c33a121862dcea52af121df109cbd5e6ad383e9bc24dd9807ef547a4aa0ba6fe5a0d2eebde5e6b01399a49d4f2a7f3d5362
+  languageName: node
+  linkType: hard
+
+"@microsoft/kiota-serialization-text@npm:^1.0.0-preview.99":
+  version: 1.0.0-preview.99
+  resolution: "@microsoft/kiota-serialization-text@npm:1.0.0-preview.99"
+  dependencies:
+    "@microsoft/kiota-abstractions": "npm:^1.0.0-preview.99"
+    tslib: "npm:^2.6.2"
+  checksum: 10c0/867705be5ad41c6763a2f26703bf2d8b7508acf83c38da343e032d204719411bf59032a677068064a45e74e91626524843cc029032ccbe5344b2e774269aabc6
+  languageName: node
+  linkType: hard
+
 "@microsoft/microsoft-graph-client@npm:3.0.7":
   version: 3.0.7
   resolution: "@microsoft/microsoft-graph-client@npm:3.0.7"
@@ -12016,7 +12122,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@opentelemetry/api@npm:1.9.0, @opentelemetry/api@npm:^1.0.0, @opentelemetry/api@npm:^1.3.0, @opentelemetry/api@npm:^1.8, @opentelemetry/api@npm:^1.9.0":
+"@opentelemetry/api@npm:1.9.0, @opentelemetry/api@npm:^1.0.0, @opentelemetry/api@npm:^1.3.0, @opentelemetry/api@npm:^1.7.0, @opentelemetry/api@npm:^1.8, @opentelemetry/api@npm:^1.9.0":
   version: 1.9.0
   resolution: "@opentelemetry/api@npm:1.9.0"
   checksum: 10c0/9aae2fe6e8a3a3eeb6c1fdef78e1939cf05a0f37f8a4fae4d6bf2e09eb1e06f966ece85805626e01ba5fab48072b94f19b835449e58b6d26720ee19a58298add
@@ -19172,6 +19278,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@std-uritemplate/std-uritemplate@npm:^2.0.0":
+  version: 2.0.6
+  resolution: "@std-uritemplate/std-uritemplate@npm:2.0.6"
+  checksum: 10c0/66776198a356055d1aaaf02e272f8ed58c6af24e3afbffb44ef05f4dfb32324ce3f9caf1f12ec7d9f354ad0efd6847c477eda4489a7d45fc197a3f7c53c62c16
+  languageName: node
+  linkType: hard
+
 "@stitches/core@npm:^1.2.6":
   version: 1.2.8
   resolution: "@stitches/core@npm:1.2.8"
@@ -22892,6 +23005,17 @@ __metadata:
     "@typescript-eslint/types": "npm:8.39.0"
     eslint-visitor-keys: "npm:^4.2.1"
   checksum: 10c0/657766d4e9ad01e8fd8e8fd39f8f3d043ecdffb78f1ab9653acbed3c971e221b1f680e90752394308c532703211f9f441bb449f62c0f61a48750b24ccb4379ef
+  languageName: node
+  linkType: hard
+
+"@typespec/ts-http-runtime@npm:^0.3.0":
+  version: 0.3.1
+  resolution: "@typespec/ts-http-runtime@npm:0.3.1"
+  dependencies:
+    http-proxy-agent: "npm:^7.0.0"
+    https-proxy-agent: "npm:^7.0.0"
+    tslib: "npm:^2.6.2"
+  checksum: 10c0/9444cc2a073a55f7218ae6e1946b61184f6ec941add16892fdf4417066cf976fb071071c918a00a80a4b80e203dd5f189bc57b513bb8225d171c4e0cedb5a469
   languageName: node
   linkType: hard
 
@@ -36408,7 +36532,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"https-proxy-agent@npm:^7.0.1, https-proxy-agent@npm:^7.0.5, https-proxy-agent@npm:^7.0.6":
+"https-proxy-agent@npm:^7.0.0, https-proxy-agent@npm:^7.0.1, https-proxy-agent@npm:^7.0.5, https-proxy-agent@npm:^7.0.6":
   version: 7.0.6
   resolution: "https-proxy-agent@npm:7.0.6"
   dependencies:
@@ -52070,6 +52194,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tinyduration@npm:^3.3.0":
+  version: 3.4.1
+  resolution: "tinyduration@npm:3.4.1"
+  checksum: 10c0/06f0fbf5658c92a07d900208bb0bafad30a4c61cc914fdd72edeb5f02ce9f728eebd986da43b115f2b00d6dde06242a107c018e834db2d3a5ddca37b293a61ba
+  languageName: node
+  linkType: hard
+
 "tinyglobby@npm:^0.2.12, tinyglobby@npm:^0.2.14":
   version: 0.2.14
   resolution: "tinyglobby@npm:0.2.14"
@@ -52997,6 +53128,13 @@ __metadata:
     "@lingui/format-po": "npm:5.1.2"
     "@lingui/react": "npm:5.1.2"
     "@lingui/vite-plugin": "npm:5.1.2"
+    "@microsoft/kiota-abstractions": "npm:^1.0.0-preview.99"
+    "@microsoft/kiota-authentication-azure": "npm:^1.0.0-preview.99"
+    "@microsoft/kiota-http-fetchlibrary": "npm:^1.0.0-preview.99"
+    "@microsoft/kiota-serialization-form": "npm:^1.0.0-preview.99"
+    "@microsoft/kiota-serialization-json": "npm:^1.0.0-preview.99"
+    "@microsoft/kiota-serialization-multipart": "npm:^1.0.0-preview.99"
+    "@microsoft/kiota-serialization-text": "npm:^1.0.0-preview.99"
     "@microsoft/microsoft-graph-client": "npm:3.0.7"
     "@microsoft/microsoft-graph-types": "npm:^2.40.0"
     "@nestjs/axios": "npm:3.0.2"
