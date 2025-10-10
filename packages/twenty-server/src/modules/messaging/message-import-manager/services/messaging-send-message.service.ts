@@ -5,6 +5,7 @@ import { ConnectedAccountProvider } from 'twenty-shared/types';
 import { assertUnreachable, isDefined } from 'twenty-shared/utils';
 import { z } from 'zod';
 
+import { Message } from 'src/modules/connected-account/oauth2-client-manager/drivers/microsoft/microsoft-graph-client/models';
 import { type ConnectedAccountWorkspaceEntity } from 'src/modules/connected-account/standard-objects/connected-account.workspace-entity';
 import {
   MessageImportDriverException,
@@ -92,22 +93,21 @@ export class MessagingSendMessageService {
         break;
       }
       case ConnectedAccountProvider.MICROSOFT: {
-        const microsoftClient =
+        const { client } =
           await this.microsoftClientProvider.getMicrosoftClient(
             connectedAccount,
           );
 
-        const message = {
+        const message: Message = {
           subject: sendMessageInput.subject,
           body: {
-            contentType: 'HTML',
+            contentType: 'html',
             content: sendMessageInput.html,
           },
           toRecipients: [{ emailAddress: { address: sendMessageInput.to } }],
         };
 
-        const response = await microsoftClient
-          .api(`/me/messages`)
+        const response = await client.me.messages
           .post(message)
           .catch((error) => {
             if (isAccessTokenRefreshingError(error?.body)) {
@@ -119,11 +119,11 @@ export class MessagingSendMessageService {
             throw error;
           });
 
-        z.string().parse(response.id);
+        z.string().parse(response?.id);
 
-        await microsoftClient
-          .api(`/me/messages/${response.id}/send`)
-          .post({})
+        await client.me.messages
+          .byMessageId(response?.id!)
+          .send.post()
           .catch((error) => {
             if (isAccessTokenRefreshingError(error?.body)) {
               throw new MessageImportDriverException(
