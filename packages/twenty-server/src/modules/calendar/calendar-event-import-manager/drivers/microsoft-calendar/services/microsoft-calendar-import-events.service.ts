@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { type Event } from '@microsoft/microsoft-graph-types';
+import { BatchRequestContent } from '@microsoft/msgraph-sdk-core';
 
 import {
   CalendarEventImportDriverException,
@@ -9,6 +9,7 @@ import {
 import { formatMicrosoftCalendarEvents } from 'src/modules/calendar/calendar-event-import-manager/drivers/microsoft-calendar/utils/format-microsoft-calendar-event.util';
 import { parseMicrosoftCalendarError } from 'src/modules/calendar/calendar-event-import-manager/drivers/microsoft-calendar/utils/parse-microsoft-calendar-error.util';
 import { type FetchedCalendarEvent } from 'src/modules/calendar/common/types/fetched-calendar-event';
+import { type Event as MicrosoftCalendarEvent } from 'src/modules/connected-account/oauth2-client-manager/drivers/microsoft/microsoft-graph-client/models';
 import { MicrosoftOAuth2ClientManagerService } from 'src/modules/connected-account/oauth2-client-manager/drivers/microsoft/microsoft-oauth2-client-manager.service';
 import { type ConnectedAccountWorkspaceEntity } from 'src/modules/connected-account/standard-objects/connected-account.workspace-entity';
 import { isAccessTokenRefreshingError } from 'src/modules/messaging/message-import-manager/drivers/microsoft/utils/is-access-token-refreshing-error.utils';
@@ -27,19 +28,45 @@ export class MicrosoftCalendarImportEventsService {
     changedEventIds: string[],
   ): Promise<FetchedCalendarEvent[]> {
     try {
-      const microsoftClient =
+      const { client, adapter } =
         await this.microsoftOAuth2ClientManagerService.getOAuth2Client(
           connectedAccount.refreshToken,
         );
 
-      const events: Event[] = [];
+      const events: MicrosoftCalendarEvent[] = [];
 
-      for (const changedEventId of changedEventIds) {
-        const event = await microsoftClient
-          .api(`/me/calendar/events/${changedEventId}`)
-          .get();
+      const batchLimit = 20;
+      const allEvents: MicrosoftCalendarEvent[] = [];
 
-        events.push(event);
+      for (let i = 0; i < changedEventIds.length; i += batchLimit) {
+        const batchEventIds = changedEventIds.slice(i, i + batchLimit);
+
+        const batchRequestContent = new BatchRequestContent(adapter, {});
+
+        for (const eventId of batchEventIds) {
+          const eventRequestBuilder = client.me.events.byEventId(eventId);
+
+          const requestInfo = eventRequestBuilder.toGetRequestInformation({
+            headers: { Accept: 'application/json' },
+          });
+
+          batchRequestContent.addBatchRequest(requestInfo);
+        }
+
+        const batchResponse = await batchRequestContent.postAsync();
+
+        if (batchResponse) {
+          const responses = batchResponse.getResponses();
+
+          for (const [_id, response] of responses) {
+            if (response.status === 200 && response.body) {
+              const decoder = new TextDecoder('utf-8');
+              const mimeContent = JSON.parse(decoder.decode(response.body));
+
+              allEvents.push(mimeContent);
+            }
+          }
+        }
       }
 
       return formatMicrosoftCalendarEvents(events);

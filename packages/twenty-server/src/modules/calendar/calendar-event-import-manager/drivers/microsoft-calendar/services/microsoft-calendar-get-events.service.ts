@@ -1,17 +1,12 @@
 import { Injectable } from '@nestjs/common';
 
 import {
-  type PageCollection,
-  PageIterator,
-  type PageIteratorCallback,
-} from '@microsoft/microsoft-graph-client';
-
-import {
   CalendarEventImportDriverException,
   CalendarEventImportDriverExceptionCode,
 } from 'src/modules/calendar/calendar-event-import-manager/drivers/exceptions/calendar-event-import-driver.exception';
 import { parseMicrosoftCalendarError } from 'src/modules/calendar/calendar-event-import-manager/drivers/microsoft-calendar/utils/parse-microsoft-calendar-error.util';
 import { type GetCalendarEventsResponse } from 'src/modules/calendar/calendar-event-import-manager/services/calendar-get-events.service';
+import { BaseDeltaFunctionResponse } from 'src/modules/connected-account/oauth2-client-manager/drivers/microsoft/microsoft-graph-client/models';
 import { MicrosoftOAuth2ClientManagerService } from 'src/modules/connected-account/oauth2-client-manager/drivers/microsoft/microsoft-oauth2-client-manager.service';
 import { type ConnectedAccountWorkspaceEntity } from 'src/modules/connected-account/standard-objects/connected-account.workspace-entity';
 import { isAccessTokenRefreshingError } from 'src/modules/messaging/message-import-manager/drivers/microsoft/utils/is-access-token-refreshing-error.utils';
@@ -30,35 +25,45 @@ export class MicrosoftCalendarGetEventsService {
     syncCursor?: string,
   ): Promise<GetCalendarEventsResponse> {
     try {
-      const microsoftClient =
+      const { client } =
         await this.microsoftOAuth2ClientManagerService.getOAuth2Client(
           connectedAccount.refreshToken,
         );
       const eventIds: string[] = [];
 
-      const response: PageCollection = await microsoftClient
-        .api(syncCursor || '/me/calendar/events/delta')
-        .version('beta')
-        .get();
+      const deltaBuilder = syncCursor
+        ? client.me.events.delta.withUrl(syncCursor)
+        : client.me.events.delta;
 
-      const callback: PageIteratorCallback = (data) => {
-        eventIds.push(data.id);
+      let nextLink: string | undefined | null;
+      let deltaLink: string | undefined | null;
 
-        return true;
-      };
+      do {
+        const response = nextLink
+          ? await client.me.events.withUrl(nextLink).get()
+          : await deltaBuilder.get({
+              queryParameters: {
+                select: ['id'],
+                top: 999,
+              },
+            });
 
-      const pageIterator = new PageIterator(
-        microsoftClient,
-        response,
-        callback,
-      );
+        response?.value?.forEach((value) => {
+          eventIds.push(value.id!);
+        });
 
-      await pageIterator.iterate();
+        nextLink = response?.odataNextLink;
+        const deltaResponse = response as BaseDeltaFunctionResponse;
+
+        if (deltaResponse?.odataDeltaLink) {
+          deltaLink = deltaResponse.odataDeltaLink;
+        }
+      } while (nextLink);
 
       return {
         fullEvents: false,
         calendarEventIds: eventIds,
-        nextSyncCursor: pageIterator.getDeltaLink() || '',
+        nextSyncCursor: deltaLink!,
       };
     } catch (error) {
       if (isAccessTokenRefreshingError(error?.body)) {

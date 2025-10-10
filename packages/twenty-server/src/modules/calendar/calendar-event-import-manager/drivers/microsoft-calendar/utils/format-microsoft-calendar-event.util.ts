@@ -1,5 +1,4 @@
 import {
-  type Event,
   type NullableOption,
   type ResponseType,
 } from '@microsoft/microsoft-graph-types';
@@ -7,14 +6,17 @@ import {
 import { sanitizeCalendarEvent } from 'src/modules/calendar/calendar-event-import-manager/drivers/utils/sanitizeCalendarEvent';
 import { CalendarEventParticipantResponseStatus } from 'src/modules/calendar/common/standard-objects/calendar-event-participant.workspace-entity';
 import { type FetchedCalendarEvent } from 'src/modules/calendar/common/types/fetched-calendar-event';
+import { type Event as MicrosoftCalendarEvent } from 'src/modules/connected-account/oauth2-client-manager/drivers/microsoft/microsoft-graph-client/models';
 
 export const formatMicrosoftCalendarEvents = (
-  events: Event[],
+  events: MicrosoftCalendarEvent[],
 ): FetchedCalendarEvent[] => {
   return events.map(formatMicrosoftCalendarEvent);
 };
 
-const formatMicrosoftCalendarEvent = (event: Event): FetchedCalendarEvent => {
+const formatMicrosoftCalendarEvent = (
+  event: MicrosoftCalendarEvent,
+): FetchedCalendarEvent => {
   const formatResponseStatus = (
     status: NullableOption<ResponseType> | undefined,
   ) => {
@@ -38,8 +40,8 @@ const formatMicrosoftCalendarEvent = (event: Event): FetchedCalendarEvent => {
     startsAt: event.start?.dateTime ?? '',
     endsAt: event.end?.dateTime ?? '',
     id: event.id ?? '',
-    externalCreatedAt: event.createdDateTime ?? '',
-    externalUpdatedAt: event.lastModifiedDateTime ?? '',
+    externalCreatedAt: event.createdDateTime?.toString() ?? '',
+    externalUpdatedAt: event.lastModifiedDateTime?.toString() ?? '',
     description: event.body?.content ?? '',
     location: event.location?.displayName ?? '',
     iCalUID: event.iCalUId ?? '',
