@@ -110,6 +110,19 @@ export const SettingsAccountsMessageChannelDetails = ({
             onChange={handleMessageFolderImportPolicyChange}
             value={messageChannel.messageFolderImportPolicy}
           />
+          <Card rounded>
+            <SettingsOptionCardContentToggle
+              Icon={IconUsers}
+              title={t`Exclude group emails`}
+              description={t`Don't sync emails from team@ support@ noreply@...`}
+              checked={messageChannel.excludeGroupEmails}
+              onChange={() =>
+                handleIsGroupEmailExcludedToggle(
+                  !messageChannel.excludeGroupEmails,
+                )
+              }
+            />
+          </Card>
         </Section>
       )}
       <Section>
@@ -138,24 +151,12 @@ export const SettingsAccountsMessageChannelDetails = ({
             Icon={IconBriefcase}
             title={t`Exclude non-professional emails`}
             description={t`Don’t create contacts from/to Gmail, Outlook emails`}
-            divider
             checked={messageChannel.excludeNonProfessionalEmails}
             onChange={() => {
               handleIsNonProfessionalEmailExcludedToggle(
                 !messageChannel.excludeNonProfessionalEmails,
               );
             }}
-          />
-          <SettingsOptionCardContentToggle
-            Icon={IconUsers}
-            title={t`Exclude group emails`}
-            description={t`Don’t sync emails from team@ support@ noreply@...`}
-            checked={messageChannel.excludeGroupEmails}
-            onChange={() =>
-              handleIsGroupEmailExcludedToggle(
-                !messageChannel.excludeGroupEmails,
-              )
-            }
           />
         </Card>
       </Section>
