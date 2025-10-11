@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import axios from 'axios';
+import { ConfidentialClientApplication } from '@azure/msal-node';
 import { z } from 'zod';
 
 import { TwentyConfigService } from 'src/engine/core-modules/twenty-config/twenty-config.service';
@@ -11,44 +11,39 @@ export type MicrosoftTokens = {
   refreshToken: string;
 };
 
-interface MicrosoftRefreshTokenResponse {
-  access_token: string;
-  refresh_token: string;
-  scope: string;
-  token_type: string;
-  expires_in: number;
-  id_token?: string;
-}
 @Injectable()
 export class MicrosoftAPIRefreshAccessTokenService {
-  constructor(private readonly twentyConfigService: TwentyConfigService) {}
+  private msalClient: ConfidentialClientApplication;
 
-  async refreshTokens(refreshToken: string): Promise<ConnectedAccountTokens> {
-    const response = await axios.post<MicrosoftRefreshTokenResponse>(
-      'https://login.microsoftonline.com/common/oauth2/v2.0/token',
-      new URLSearchParams({
-        client_id: this.twentyConfigService.get('AUTH_MICROSOFT_CLIENT_ID'),
-        client_secret: this.twentyConfigService.get(
+  constructor(private readonly twentyConfigService: TwentyConfigService) {
+    this.msalClient = new ConfidentialClientApplication({
+      auth: {
+        clientId: this.twentyConfigService.get('AUTH_MICROSOFT_CLIENT_ID'),
+        clientSecret: this.twentyConfigService.get(
           'AUTH_MICROSOFT_CLIENT_SECRET',
         ),
-        refresh_token: refreshToken,
-        grant_type: 'refresh_token',
-      }),
-      {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
+        authority: 'https://login.microsoftonline.com/common',
       },
-    );
+    });
+  }
+
+  async refreshTokens(refreshToken: string): Promise<ConnectedAccountTokens> {
+    const response = await this.msalClient.acquireTokenByRefreshToken({
+      refreshToken,
+      scopes: ['https://graph.microsoft.com/.default'],
+    });
+
+    if (!response || !response.accessToken) {
+      throw new Error('Failed to acquire access token');
+    }
 
     z.object({
-      access_token: z.string(),
-      refresh_token: z.string(),
-    }).parse(response.data);
+      accessToken: z.string(),
+    }).parse(response);
 
     return {
-      accessToken: response.data.access_token,
-      refreshToken: response.data.refresh_token,
+      accessToken: response.accessToken,
+      refreshToken: refreshToken,
     };
   }
 }

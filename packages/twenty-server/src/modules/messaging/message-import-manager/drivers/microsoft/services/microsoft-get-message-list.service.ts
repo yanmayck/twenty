@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 
 import { isDefined } from 'twenty-shared/utils';
 
-import { type BaseDeltaFunctionResponse } from 'src/modules/connected-account/oauth2-client-manager/drivers/microsoft/microsoft-graph-client/models';
+import { type BaseDeltaFunctionResponse } from 'src/modules/connected-account/oauth2-client-manager/drivers/microsoft/microsoft-kiota-client/models';
 import { type ConnectedAccountWorkspaceEntity } from 'src/modules/connected-account/standard-objects/connected-account.workspace-entity';
 import { type MessageFolderWorkspaceEntity } from 'src/modules/messaging/common/standard-objects/message-folder.workspace-entity';
 import {

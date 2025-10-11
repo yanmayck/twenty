@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { BatchRequestContent } from '@microsoft/msgraph-sdk-core';
 
-import { Message } from 'src/modules/connected-account/oauth2-client-manager/drivers/microsoft/microsoft-graph-client/models';
+import { Message } from 'src/modules/connected-account/oauth2-client-manager/drivers/microsoft/microsoft-kiota-client/models';
 import { type ConnectedAccountWorkspaceEntity } from 'src/modules/connected-account/standard-objects/connected-account.workspace-entity';
 import { MicrosoftClientProvider } from 'src/modules/messaging/message-import-manager/drivers/microsoft/providers/microsoft-client.provider';
 

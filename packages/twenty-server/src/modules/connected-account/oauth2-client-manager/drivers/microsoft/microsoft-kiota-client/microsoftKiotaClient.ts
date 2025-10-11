@@ -15,11 +15,11 @@ import { MultipartSerializationWriterFactory } from '@microsoft/kiota-serializat
 import { TextParseNodeFactory, TextSerializationWriterFactory } from '@microsoft/kiota-serialization-text';
 
 /**
- * Instantiates a new {@link MicrosoftGraphClient} and sets the default values.
+ * Instantiates a new {@link MicrosoftKiotaClient} and sets the default values.
  * @param requestAdapter The request adapter to use to execute the requests.
  */
 // @ts-ignore
-export function createMicrosoftGraphClient(requestAdapter: RequestAdapter) {
+export function createMicrosoftKiotaClient(requestAdapter: RequestAdapter) {
     if (requestAdapter === undefined) {
         throw new Error("requestAdapter cannot be undefined");
     }
@@ -46,12 +46,12 @@ export function createMicrosoftGraphClient(requestAdapter: RequestAdapter) {
     const pathParameters: Record<string, unknown> = {
         "baseurl": requestAdapter.baseUrl,
     };
-    return apiClientProxifier<MicrosoftGraphClient>(requestAdapter, pathParameters, MicrosoftGraphClientNavigationMetadata, undefined);
+    return apiClientProxifier<MicrosoftKiotaClient>(requestAdapter, pathParameters, MicrosoftKiotaClientNavigationMetadata, undefined);
 }
 /**
  * The main entry point of the SDK, exposes the configuration and the fluent API.
  */
-export interface MicrosoftGraphClient extends BaseRequestBuilder<MicrosoftGraphClient> {
+export interface MicrosoftKiotaClient extends BaseRequestBuilder<MicrosoftKiotaClient> {
     /**
      * Provides operations to manage the user singleton.
      */
@@ -60,11 +60,11 @@ export interface MicrosoftGraphClient extends BaseRequestBuilder<MicrosoftGraphC
 /**
  * Uri template for the request builder.
  */
-export const MicrosoftGraphClientUriTemplate = "{+baseurl}";
+export const MicrosoftKiotaClientUriTemplate = "{+baseurl}";
 /**
  * Metadata for all the navigation properties in the request builder.
  */
-export const MicrosoftGraphClientNavigationMetadata: Record<Exclude<keyof MicrosoftGraphClient, KeysToExcludeForNavigationMetadata>, NavigationMetadata> = {
+export const MicrosoftKiotaClientNavigationMetadata: Record<Exclude<keyof MicrosoftKiotaClient, KeysToExcludeForNavigationMetadata>, NavigationMetadata> = {
     me: {
         requestsMetadata: MeRequestBuilderRequestsMetadata,
         navigationMetadata: MeRequestBuilderNavigationMetadata,

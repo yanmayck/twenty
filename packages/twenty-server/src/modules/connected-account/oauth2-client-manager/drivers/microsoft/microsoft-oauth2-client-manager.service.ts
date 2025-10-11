@@ -8,10 +8,15 @@ import type { AccessToken, TokenCredential } from '@azure/core-auth';
 
 import { TwentyConfigService } from 'src/engine/core-modules/twenty-config/twenty-config.service';
 import {
-  createMicrosoftGraphClient,
-  type MicrosoftGraphClient,
-} from 'src/modules/connected-account/oauth2-client-manager/drivers/microsoft/microsoft-graph-client/microsoftGraphClient';
+  createMicrosoftKiotaClient,
+  type MicrosoftKiotaClient,
+} from 'src/modules/connected-account/oauth2-client-manager/drivers/microsoft/microsoft-graph-client/microsoftKiotaClient';
 import { ConnectedAccountRefreshAccessTokenExceptionCode } from 'src/modules/connected-account/refresh-tokens-manager/exceptions/connected-account-refresh-tokens.exception';
+
+interface TokenCacheEntry {
+  accessToken: string;
+  expiresOn: Date;
+}
 
 @Injectable()
 export class MicrosoftOAuth2ClientManagerService {
@@ -19,6 +24,7 @@ export class MicrosoftOAuth2ClientManagerService {
     MicrosoftOAuth2ClientManagerService.name,
   );
   private msalClient: ConfidentialClientApplication;
+  private tokenCache: Map<string, TokenCacheEntry> = new Map();
 
   constructor(private readonly twentyConfigService: TwentyConfigService) {
     this.msalClient = new ConfidentialClientApplication({
@@ -33,7 +39,7 @@ export class MicrosoftOAuth2ClientManagerService {
   }
 
   public async getOAuth2Client(refreshToken: string): Promise<{
-    client: MicrosoftGraphClient;
+    client: MicrosoftKiotaClient;
     adapter: FetchRequestAdapter;
   }> {
     const tokenCredential: TokenCredential = {
@@ -42,22 +48,42 @@ export class MicrosoftOAuth2ClientManagerService {
       ): Promise<AccessToken | null> => {
         try {
           const scopesArray = Array.isArray(scopes) ? scopes : [scopes];
+          const cacheKey = `${refreshToken}:${scopesArray.sort().join(',')}`;
+
+          // Check if we have a cached token that's still valid (with 5 min buffer)
+          const cached = this.tokenCache.get(cacheKey);
+
+          if (
+            cached &&
+            cached.expiresOn.getTime() > Date.now() + 5 * 60 * 1000
+          ) {
+            return {
+              token: cached.accessToken,
+              expiresOnTimestamp: cached.expiresOn.getTime(),
+            };
+          }
 
           const response = await this.msalClient.acquireTokenByRefreshToken({
             refreshToken,
             scopes: scopesArray,
           });
 
-          if (!response || !response.accessToken) {
+          if (!response || !response.accessToken || !response.expiresOn) {
             this.logger.error('Failed to acquire access token');
             throw new Error(
               `${MicrosoftOAuth2ClientManagerService.name} error: ${ConnectedAccountRefreshAccessTokenExceptionCode.REFRESH_ACCESS_TOKEN_FAILED}`,
             );
           }
 
+          // Cache the token
+          this.tokenCache.set(cacheKey, {
+            accessToken: response.accessToken,
+            expiresOn: response.expiresOn,
+          });
+
           return {
             token: response.accessToken,
-            expiresOnTimestamp: response.expiresOn?.getTime() ?? 0,
+            expiresOnTimestamp: response.expiresOn.getTime(),
           };
         } catch (error) {
           this.logger.error(
@@ -74,7 +100,7 @@ export class MicrosoftOAuth2ClientManagerService {
     );
 
     const requestAdapter = new FetchRequestAdapter(authProvider);
-    const client = createMicrosoftGraphClient(requestAdapter);
+    const client = createMicrosoftKiotaClient(requestAdapter);
 
     return {
       client,

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { FetchRequestAdapter } from '@microsoft/kiota-http-fetchlibrary';
 
-import { type MicrosoftGraphClient } from 'src/modules/connected-account/oauth2-client-manager/drivers/microsoft/microsoft-graph-client/microsoftGraphClient';
+import { type MicrosoftKiotaClient } from 'src/modules/connected-account/oauth2-client-manager/drivers/microsoft/microsoft-kiota-client/microsoftKiotaClient';
 import { MicrosoftOAuth2ClientManagerService } from 'src/modules/connected-account/oauth2-client-manager/drivers/microsoft/microsoft-oauth2-client-manager.service';
 import { type ConnectedAccountWorkspaceEntity } from 'src/modules/connected-account/standard-objects/connected-account.workspace-entity';
 
@@ -18,7 +18,7 @@ export class MicrosoftClientProvider {
       'refreshToken' | 'id'
     >,
   ): Promise<{
-    client: MicrosoftGraphClient;
+    client: MicrosoftKiotaClient;
     adapter: FetchRequestAdapter;
   }> {
     return await this.microsoftOAuth2ClientManagerService.getOAuth2Client(

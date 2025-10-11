@@ -6,7 +6,7 @@ import {
 import { sanitizeCalendarEvent } from 'src/modules/calendar/calendar-event-import-manager/drivers/utils/sanitizeCalendarEvent';
 import { CalendarEventParticipantResponseStatus } from 'src/modules/calendar/common/standard-objects/calendar-event-participant.workspace-entity';
 import { type FetchedCalendarEvent } from 'src/modules/calendar/common/types/fetched-calendar-event';
-import { type Event as MicrosoftCalendarEvent } from 'src/modules/connected-account/oauth2-client-manager/drivers/microsoft/microsoft-graph-client/models';
+import { type Event as MicrosoftCalendarEvent } from 'src/modules/connected-account/oauth2-client-manager/drivers/microsoft/microsoft-kiota-client/models';
 
 export const formatMicrosoftCalendarEvents = (
   events: MicrosoftCalendarEvent[],

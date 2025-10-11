@@ -10,7 +10,9 @@ const jestConfig = {
   rootDir: './',
   testEnvironment: 'node',
   setupFilesAfterEnv: ['./setupTests.ts'],
-  transformIgnorePatterns: ['/node_modules/'],
+  transformIgnorePatterns: [
+    '/node_modules/(?!(@microsoft/msgraph-sdk-core|@microsoft/kiota-.*)/)',
+  ],
   testRegex: '.*\\.spec\\.ts$',
   transform: {
     '^.+\\.(t|j)s$': [
