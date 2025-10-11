@@ -10,7 +10,7 @@ import { TwentyConfigService } from 'src/engine/core-modules/twenty-config/twent
 import {
   createMicrosoftKiotaClient,
   type MicrosoftKiotaClient,
-} from 'src/modules/connected-account/oauth2-client-manager/drivers/microsoft/microsoft-graph-client/microsoftKiotaClient';
+} from 'src/modules/connected-account/oauth2-client-manager/drivers/microsoft/microsoft-kiota-client/microsoftKiotaClient';
 import { ConnectedAccountRefreshAccessTokenExceptionCode } from 'src/modules/connected-account/refresh-tokens-manager/exceptions/connected-account-refresh-tokens.exception';
 
 interface TokenCacheEntry {
