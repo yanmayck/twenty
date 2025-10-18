@@ -99,7 +99,7 @@ export const transformTwoDimensionalGroupByToLineChartData = ({
     const dataMap = seriesMap.get(yValue)!;
     const data: LineChartDataPoint[] = Array.from(xValues).map((xValue) => ({
       x: xValue,
-      y: dataMap.get(xValue) ?? null,
+      y: dataMap.get(xValue) ?? 0,
     }));
 
     return {

@@ -56,14 +56,14 @@ export const GraphWidgetLineChartRenderer = ({
         yAxisLabel={yAxisLabel}
         showLegend={true}
         showGrid={true}
-        enableArea
-        stackedArea
-        curve="monotoneX"
+        enablePoints={false}
+        enableArea={true}
+        stackedArea={false}
         lineWidth={2}
         enableSlices="x"
         displayType="shortNumber"
         xScale={{ type: 'point' }}
-        yScale={{ type: 'linear', min: 0, max: 'auto' }}
+        yScale={{ type: 'linear', min: 'auto', max: 'auto' }}
       />
     </Suspense>
   );
