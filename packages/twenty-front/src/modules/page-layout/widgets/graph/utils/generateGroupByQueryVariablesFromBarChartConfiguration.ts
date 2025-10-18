@@ -7,7 +7,10 @@ import {
   type ObjectRecordOrderByWithGroupByDateField,
 } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
-import { type BarChartConfiguration } from '~/generated/graphql';
+import {
+  type BarChartConfiguration,
+  type LineChartConfiguration,
+} from '~/generated/graphql';
 import { buildGroupByFieldObject } from './buildGroupByFieldObject';
 
 export const generateGroupByQueryVariablesFromBarChartConfiguration = ({
@@ -16,7 +19,7 @@ export const generateGroupByQueryVariablesFromBarChartConfiguration = ({
   aggregateOperation,
 }: {
   objectMetadataItem: ObjectMetadataItem;
-  barChartConfiguration: BarChartConfiguration;
+  barChartConfiguration: BarChartConfiguration | LineChartConfiguration;
   aggregateOperation?: string;
 }) => {
   const groupByFieldXId =

@@ -14,11 +14,7 @@ const graphTypeOptions = [
   GraphType.GAUGE,
 ];
 
-const disabledGraphTypeOptions = [
-  GraphType.PIE,
-  GraphType.LINE,
-  GraphType.GAUGE,
-];
+const disabledGraphTypeOptions = [GraphType.PIE, GraphType.GAUGE];
 
 const StyledChartTypeSelectionContainer = styled.div`
   display: flex;

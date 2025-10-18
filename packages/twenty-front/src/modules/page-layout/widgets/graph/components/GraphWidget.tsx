@@ -3,18 +3,11 @@ import { getDefaultWidgetData } from '@/page-layout/utils/getDefaultWidgetData';
 import { PageLayoutWidgetNoDataDisplay } from '@/page-layout/widgets/components/PageLayoutWidgetNoDataDisplay';
 import { ChartSkeletonLoader } from '@/page-layout/widgets/graph/components/ChartSkeletonLoader';
 import { GraphWidgetBarChartRenderer } from '@/page-layout/widgets/graph/graphWidgetBarChart/components/GraphWidgetBarChartRenderer';
+import { GraphWidgetLineChartRenderer } from '@/page-layout/widgets/graph/graphWidgetLineChart/components/GraphWidgetLineChartRenderer';
 import { GraphWidgetNumberChart } from '@/page-layout/widgets/graph/graphWidgetNumberChart/components/GraphWidgetNumberChart';
 import { areChartConfigurationFieldsValidForQuery } from '@/page-layout/widgets/graph/utils/areChartConfigurationFieldsValidForQuery';
 import { lazy, Suspense } from 'react';
 import { GraphType, type PageLayoutWidget } from '~/generated/graphql';
-
-const GraphWidgetLineChart = lazy(() =>
-  import(
-    '@/page-layout/widgets/graph/graphWidgetLineChart/components/GraphWidgetLineChart'
-  ).then((module) => ({
-    default: module.GraphWidgetLineChart,
-  })),
-);
 
 const GraphWidgetPieChart = lazy(() =>
   import(
@@ -105,28 +98,7 @@ export const GraphWidget = ({
       return <GraphWidgetBarChartRenderer widget={widget} />;
 
     case GraphType.LINE:
-      return (
-        <Suspense fallback={<ChartSkeletonLoader />}>
-          <GraphWidgetLineChart
-            id={`line-chart-${widget.id}`}
-            data={data.series}
-            enableArea={data.enableArea}
-            showLegend={data.showLegend}
-            showGrid={data.showGrid}
-            enablePoints={data.enablePoints}
-            xAxisLabel={data.xAxisLabel}
-            yAxisLabel={data.yAxisLabel}
-            displayType={data.displayType}
-            prefix={data.prefix}
-            suffix={data.suffix}
-            xScale={data.xScale}
-            yScale={data.yScale}
-            curve={data.curve}
-            stackedArea={data.stackedArea}
-            enableSlices={data.enableSlices}
-          />
-        </Suspense>
-      );
+      return <GraphWidgetLineChartRenderer widget={widget} />;
 
     default:
       return null;

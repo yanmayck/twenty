@@ -9,14 +9,17 @@ import {
   computeRecordGqlOperationFilter,
   isDefined,
 } from 'twenty-shared/utils';
-import { type BarChartConfiguration } from '~/generated-metadata/graphql';
+import {
+  type BarChartConfiguration,
+  type LineChartConfiguration,
+} from '~/generated-metadata/graphql';
 
 export const useGraphWidgetGroupByQuery = ({
   objectMetadataItemId,
   configuration,
 }: {
   objectMetadataItemId: string;
-  configuration: BarChartConfiguration;
+  configuration: BarChartConfiguration | LineChartConfiguration;
 }) => {
   const { objectMetadataItem } = useObjectMetadataItemById({
     objectId: objectMetadataItemId,
