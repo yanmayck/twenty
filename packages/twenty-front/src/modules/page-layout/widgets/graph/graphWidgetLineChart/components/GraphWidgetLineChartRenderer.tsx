@@ -43,6 +43,7 @@ export const GraphWidgetLineChartRenderer = ({
   }
 
   if (isDefined(error)) {
+    // TODO: ideally should be replaced with a similar status to packages/twenty-front/src/modules/page-layout/widgets/components/PageLayoutWidgetNoDataDisplay.tsx
     return <div>Error: {error.message}</div>;
   }
 
@@ -59,11 +60,16 @@ export const GraphWidgetLineChartRenderer = ({
         enablePoints={false}
         enableArea={true}
         stackedArea={false}
-        lineWidth={2}
+        lineWidth={1}
         enableSlices="x"
         displayType="shortNumber"
         xScale={{ type: 'point' }}
-        yScale={{ type: 'linear', min: 'auto', max: 'auto' }}
+        yScale={{
+          type: 'linear',
+          min: configuration.rangeMin ?? 'auto',
+          max: configuration.rangeMax ?? 'auto',
+          clamp: true,
+        }}
       />
     </Suspense>
   );

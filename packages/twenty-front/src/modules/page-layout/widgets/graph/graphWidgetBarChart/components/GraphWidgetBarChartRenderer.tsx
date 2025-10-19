@@ -55,6 +55,7 @@ export const GraphWidgetBarChartRenderer = ({
   }
 
   if (isDefined(error)) {
+    // TODO: ideally should be replaced with a similar status to packages/twenty-front/src/modules/page-layout/widgets/components/PageLayoutWidgetNoDataDisplay.tsx
     return <div>Error: {error.message}</div>;
   }
 
