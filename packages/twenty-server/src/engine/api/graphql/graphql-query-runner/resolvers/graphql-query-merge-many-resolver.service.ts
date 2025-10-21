@@ -27,6 +27,7 @@ import { buildColumnsToReturn } from 'src/engine/api/graphql/graphql-query-runne
 import { hasRecordFieldValue } from 'src/engine/api/graphql/graphql-query-runner/utils/has-record-field-value.util';
 import { mergeFieldValues } from 'src/engine/api/graphql/graphql-query-runner/utils/merge-field-values.util';
 import { type AuthContext } from 'src/engine/core-modules/auth/types/auth-context.type';
+import { compositeTypeDefinitions } from 'src/engine/metadata-modules/field-metadata/composite-types';
 import { assertMutationNotOnRemoteObject } from 'src/engine/metadata-modules/object-metadata/utils/assert-mutation-not-on-remote-object.util';
 import { type ObjectMetadataItemWithFieldMaps } from 'src/engine/metadata-modules/types/object-metadata-item-with-field-maps';
 import { type ObjectMetadataMaps } from 'src/engine/metadata-modules/types/object-metadata-maps';
@@ -77,6 +78,12 @@ export class GraphqlQueryMergeManyResolverService extends GraphqlQueryBaseResolv
       executionArgs,
       idsToDelete,
       priorityRecord.id,
+    );
+
+    await this.clearUniqueFieldsBeforeDelete(
+      executionArgs,
+      idsToDelete,
+      objectMetadataItemWithFieldMaps,
     );
 
     const queryBuilder = executionArgs.repository.createQueryBuilder(
@@ -276,6 +283,67 @@ export class GraphqlQueryMergeManyResolverService extends GraphqlQueryBaseResolv
     const updatedRecord = updatedObjectRecords.generatedMaps[0] as ObjectRecord;
 
     return updatedRecord;
+  }
+
+  private async clearUniqueFieldsBeforeDelete(
+    executionArgs: GraphqlQueryResolverExecutionArgs<MergeManyResolverArgs>,
+    idsToDelete: string[],
+    objectMetadataItemWithFieldMaps: ObjectMetadataItemWithFieldMaps,
+  ): Promise<void> {
+    const clearData: Record<string, null | Record<string, null>> = {};
+
+    const uniqueFields = Object.values(
+      objectMetadataItemWithFieldMaps.fieldsById,
+    )
+      .filter(isDefined)
+      .filter((field) => field.isUnique && field.isActive && !field.isSystem);
+
+    uniqueFields.forEach((field) => {
+      clearData[field.name] = null;
+    });
+
+    const compositeFields = Object.values(
+      objectMetadataItemWithFieldMaps.fieldsById,
+    )
+      .filter(isDefined)
+      .filter(
+        (field) =>
+          field.isActive &&
+          !field.isSystem &&
+          compositeTypeDefinitions.has(field.type),
+      );
+
+    compositeFields.forEach((field) => {
+      const compositeType = compositeTypeDefinitions.get(field.type);
+
+      if (compositeType) {
+        const uniqueProperties = compositeType.properties.filter(
+          (prop) => prop.isIncludedInUniqueConstraint,
+        );
+
+        if (uniqueProperties.length > 0) {
+          const clearedCompositeValue: Record<string, null> = {};
+
+          uniqueProperties.forEach((prop) => {
+            clearedCompositeValue[prop.name] = null;
+          });
+
+          clearData[field.name] = clearedCompositeValue;
+        }
+      }
+    });
+
+    if (Object.keys(clearData).length === 0) {
+      return;
+    }
+
+    await executionArgs.repository
+      .createQueryBuilder(objectMetadataItemWithFieldMaps.nameSingular)
+      .update()
+      .set(clearData)
+      .whereInIds(idsToDelete)
+      .returning('*')
+      .execute();
   }
 
   private async migrateRelatedRecords(
