@@ -77,6 +77,10 @@ export class UpdateOneResolverFactory
           internalContext.objectMetadataItemWithFieldMaps,
       };
 
+      console.log({
+        args,
+      });
+
       return await this.graphqlQueryRunnerService.execute(
         args,
         options,
