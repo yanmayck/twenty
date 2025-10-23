@@ -9,6 +9,7 @@ import { isNonEmptyString } from '@sniptt/guards';
 
 import { OAuth2ClientManagerService } from 'src/modules/connected-account/oauth2-client-manager/services/oauth2-client-manager.service';
 import { type ConnectedAccountWorkspaceEntity } from 'src/modules/connected-account/standard-objects/connected-account.workspace-entity';
+import { MessageChannelWorkspaceEntity } from 'src/modules/messaging/common/standard-objects/message-channel.workspace-entity';
 import { type MessageFolderWorkspaceEntity } from 'src/modules/messaging/common/standard-objects/message-folder.workspace-entity';
 import {
   MessageImportDriverException,
@@ -48,7 +49,11 @@ export class MicrosoftGetMessageListService {
     }
 
     for (const folder of messageFolders) {
-      const response = await this.getMessageList(connectedAccount, folder);
+      const response = await this.getMessageList(
+        connectedAccount,
+        messageChannel,
+        folder,
+      );
 
       result.push({
         ...response,
@@ -64,6 +69,7 @@ export class MicrosoftGetMessageListService {
       ConnectedAccountWorkspaceEntity,
       'provider' | 'accessToken' | 'id'
     >,
+    messageChannel: Pick<MessageChannelWorkspaceEntity, 'id' | 'workspaceId'>,
     messageFolder: Pick<
       MessageFolderWorkspaceEntity,
       'name' | 'syncCursor' | 'externalId'

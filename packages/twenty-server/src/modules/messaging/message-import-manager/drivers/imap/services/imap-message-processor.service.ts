@@ -42,7 +42,7 @@ export class ImapMessageProcessorService {
       );
 
       return uids.map((uid) =>
-        this.createErrorResult(uid, error as Error, Date.now()),
+        this.createErrorResult(uid, folder, error as Error, Date.now()),
       );
     }
   }
@@ -95,7 +95,7 @@ export class ImapMessageProcessorService {
       this.logger.error(`Batch fetch failed: ${error.message}`);
 
       return uids.map((uid) =>
-        this.createErrorResult(uid, error as Error, startTime),
+        this.createErrorResult(uid, '', error as Error, startTime),
       );
     }
 
@@ -129,7 +129,7 @@ export class ImapMessageProcessorService {
         processingTimeMs: processingTime,
       };
     } catch (error) {
-      return this.createErrorResult(uid, error as Error, startTime);
+      return this.createErrorResult(uid, '', error as Error, startTime);
     }
   }
 
@@ -152,12 +152,20 @@ export class ImapMessageProcessorService {
 
   createErrorResult(
     uid: number,
+    folder: string,
     error: Error,
     startTime: number,
   ): MessageFetchResult {
     const processingTime = Date.now() - startTime;
 
     this.logger.error(`Failed to fetch message UID ${uid}: ${error.message}`);
+
+    if (folder) {
+      this.imapHandleErrorService.handleImapMessagesImportError(
+        error,
+        `${folder}:${uid}`,
+      );
+    }
 
     return {
       uid,

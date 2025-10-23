@@ -5,9 +5,12 @@ import {
   MessageChannelSyncStatus,
   type MessageChannelWorkspaceEntity,
 } from 'src/modules/messaging/common/standard-objects/message-channel.workspace-entity';
+import { MessageImportDriverException } from 'src/modules/messaging/message-import-manager/drivers/exceptions/message-import-driver.exception';
 import { parseImapError } from 'src/modules/messaging/message-import-manager/drivers/imap/utils/parse-imap-error.util';
 import { parseImapMessageListFetchError } from 'src/modules/messaging/message-import-manager/drivers/imap/utils/parse-imap-message-list-fetch-error.util';
 import { parseImapMessagesImportError } from 'src/modules/messaging/message-import-manager/drivers/imap/utils/parse-imap-messages-import-error.util';
+import { MessageImportContextService } from 'src/modules/messaging/message-import-manager/services/message-import-context.service';
+import { MessageImportSyncStep } from 'src/modules/messaging/message-import-manager/services/messaging-import-exception-handler.service';
 
 @Injectable()
 export class ImapHandleErrorService {
@@ -15,6 +18,7 @@ export class ImapHandleErrorService {
 
   constructor(
     private readonly twentyORMGlobalManager: TwentyORMGlobalManager,
+    private readonly messageImportContextService: MessageImportContextService,
   ) {}
 
   async handleError(
@@ -48,26 +52,72 @@ export class ImapHandleErrorService {
     }
   }
 
-  public handleImapMessageListFetchError(error: Error): void {
+  public handleImapMessageListFetchError(error: Error): never {
+    const context = this.messageImportContextService.getContext();
     const imapError = parseImapError(error);
 
     if (imapError) {
-      throw imapError;
+      throw new MessageImportDriverException(
+        imapError.message,
+        imapError.code,
+        context
+          ? {
+              ...context,
+              syncStep: MessageImportSyncStep.MESSAGE_LIST_FETCH,
+            }
+          : undefined,
+        { cause: error },
+      );
     }
 
-    throw parseImapMessageListFetchError(error);
+    const parsed = parseImapMessageListFetchError(error);
+
+    throw new MessageImportDriverException(
+      parsed.message,
+      parsed.code,
+      context
+        ? {
+            ...context,
+            syncStep: MessageImportSyncStep.MESSAGE_LIST_FETCH,
+          }
+        : undefined,
+      { cause: error },
+    );
   }
 
   public handleImapMessagesImportError(
     error: Error,
     messageExternalId: string,
-  ): void {
+  ): never {
+    const context = this.messageImportContextService.getContext();
     const imapError = parseImapError(error);
 
     if (imapError) {
-      throw imapError;
+      throw new MessageImportDriverException(
+        imapError.message,
+        imapError.code,
+        context
+          ? {
+              ...context,
+              syncStep: MessageImportSyncStep.MESSAGES_IMPORT_ONGOING,
+            }
+          : undefined,
+        { cause: error },
+      );
     }
 
-    throw parseImapMessagesImportError(error, messageExternalId);
+    const parsed = parseImapMessagesImportError(error, messageExternalId);
+
+    throw new MessageImportDriverException(
+      parsed.message,
+      parsed.code,
+      context
+        ? {
+            ...context,
+            syncStep: MessageImportSyncStep.MESSAGES_IMPORT_ONGOING,
+          }
+        : undefined,
+      { cause: error },
+    );
   }
 }

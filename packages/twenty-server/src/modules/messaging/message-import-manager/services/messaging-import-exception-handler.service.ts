@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
 
-import { isDefined } from 'class-validator';
-
 import { ExceptionHandlerService } from 'src/engine/core-modules/exception-handler/exception-handler.service';
 import {
   type TwentyORMException,
@@ -19,10 +17,6 @@ import {
   MessageImportDriverExceptionCode,
 } from 'src/modules/messaging/message-import-manager/drivers/exceptions/message-import-driver.exception';
 import { MessageNetworkExceptionCode } from 'src/modules/messaging/message-import-manager/drivers/exceptions/message-network.exception';
-import {
-  MessageImportException,
-  MessageImportExceptionCode,
-} from 'src/modules/messaging/message-import-manager/exceptions/message-import.exception';
 
 export enum MessageImportSyncStep {
   MESSAGE_LIST_FETCH = 'MESSAGE_LIST_FETCH',
@@ -106,7 +100,7 @@ export class MessageImportExceptionHandlerService {
       'id' | 'throttleFailureCount'
     >,
     workspaceId: string,
-    exception: { message: string },
+    _exception: { message: string },
   ): Promise<void> {
     if (
       messageChannel.throttleFailureCount >= MESSAGING_THROTTLE_MAX_ATTEMPTS
@@ -117,22 +111,9 @@ export class MessageImportExceptionHandlerService {
         MessageChannelSyncStatus.FAILED_UNKNOWN,
       );
 
-      this.exceptionHandlerService.captureExceptions(
-        [
-          `Temporary error occurred ${MESSAGING_THROTTLE_MAX_ATTEMPTS} times while importing messages for message channel ${messageChannel.id.slice(0, 5)}... in workspace ${workspaceId}: ${exception?.message}`,
-        ],
-        {
-          additionalData: {
-            messageChannelId: messageChannel.id,
-          },
-          workspace: { id: workspaceId },
-        },
-      );
-
-      throw new MessageImportException(
-        `Temporary error occurred multiple times while importing messages for message channel ${messageChannel.id} in workspace ${workspaceId}: ${exception?.message}`,
-        MessageImportExceptionCode.UNKNOWN,
-      );
+      // Note: Sentry capture is now handled at the service level (messaging-message-list-fetch.service.ts, etc.)
+      // No need to throw - state transition is complete
+      return;
     }
 
     const messageChannelRepository =
@@ -189,22 +170,8 @@ export class MessageImportExceptionHandlerService {
       MessageChannelSyncStatus.FAILED_UNKNOWN,
     );
 
-    const messageImportException = new MessageImportException(
-      isDefined(exception.name)
-        ? `${exception.name}: ${exception.message}`
-        : exception.message,
-      MessageImportExceptionCode.UNKNOWN,
-    );
-
-    this.exceptionHandlerService.captureExceptions([messageImportException], {
-      additionalData: {
-        exception,
-        messageChannelId: messageChannel.id,
-      },
-      workspace: { id: workspaceId },
-    });
-
-    throw messageImportException;
+    // Note: Sentry capture is now handled at the service level (messaging-message-list-fetch.service.ts, etc.)
+    // No need to throw - state transition is complete
   }
 
   private async handlePermanentException(
@@ -218,10 +185,8 @@ export class MessageImportExceptionHandlerService {
       MessageChannelSyncStatus.FAILED_UNKNOWN,
     );
 
-    throw new MessageImportException(
-      `Permanent error occurred while importing messages for message channel ${messageChannel.id} in workspace ${workspaceId}: ${exception.message}`,
-      MessageImportExceptionCode.UNKNOWN,
-    );
+    // Note: Sentry capture is now handled at the service level (messaging-message-list-fetch.service.ts, etc.)
+    // No need to throw - state transition is complete
   }
 
   private async handleNotFoundException(

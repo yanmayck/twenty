@@ -3,6 +3,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectCacheStorage } from 'src/engine/core-modules/cache-storage/decorators/cache-storage.decorator';
 import { CacheStorageService } from 'src/engine/core-modules/cache-storage/services/cache-storage.service';
 import { CacheStorageNamespace } from 'src/engine/core-modules/cache-storage/types/cache-storage-namespace.enum';
+import { ExceptionHandlerService } from 'src/engine/core-modules/exception-handler/exception-handler.service';
 import { InjectObjectMetadataRepository } from 'src/engine/object-metadata-repository/object-metadata-repository.decorator';
 import { TwentyORMManager } from 'src/engine/twenty-orm/twenty-orm.manager';
 import { BlocklistRepository } from 'src/modules/blocklist/repositories/blocklist.repository';
@@ -15,6 +16,7 @@ import {
   type MessageChannelWorkspaceEntity,
 } from 'src/modules/messaging/common/standard-objects/message-channel.workspace-entity';
 import { MESSAGING_GMAIL_USERS_MESSAGES_GET_BATCH_SIZE } from 'src/modules/messaging/message-import-manager/drivers/gmail/constants/messaging-gmail-users-messages-get-batch-size.constant';
+import { MessageImportContextService } from 'src/modules/messaging/message-import-manager/services/message-import-context.service';
 import { MessagingAccountAuthenticationService } from 'src/modules/messaging/message-import-manager/services/messaging-account-authentication.service';
 import { MessagingGetMessagesService } from 'src/modules/messaging/message-import-manager/services/messaging-get-messages.service';
 import {
@@ -41,6 +43,8 @@ export class MessagingMessagesImportService {
     private readonly messagingGetMessagesService: MessagingGetMessagesService,
     private readonly messageImportErrorHandlerService: MessageImportExceptionHandlerService,
     private readonly messagingAccountAuthenticationService: MessagingAccountAuthenticationService,
+    private readonly exceptionHandlerService: ExceptionHandlerService,
+    private readonly messageImportContextService: MessageImportContextService,
   ) {}
 
   async processMessageBatchImport(
@@ -48,6 +52,13 @@ export class MessagingMessagesImportService {
     connectedAccount: ConnectedAccountWorkspaceEntity,
     workspaceId: string,
   ) {
+    // Set context once for this request scope
+    this.messageImportContextService.setContext({
+      messageChannelId: messageChannel.id,
+      workspaceId,
+      connectedAccountId: connectedAccount.id,
+    });
+
     let messageIdsToFetch: string[] = [];
 
     try {
@@ -162,15 +173,21 @@ export class MessagingMessagesImportService {
         workspaceId,
       );
     } catch (error) {
-      // TODO: remove this log once we catch better the error codes
-      this.logger.error(
-        `Error (${error.code}) importing messages for workspace ${workspaceId.slice(0, 8)} and account ${connectedAccount.id.slice(0, 8)}: ${error.message} - ${error.body}`,
-      );
+      // Re-add messages to cache so they can be retried
       await this.cacheStorage.setAdd(
         `messages-to-import:${workspaceId}:${messageChannel.id}`,
         messageIdsToFetch,
       );
 
+      // Error already has context from driver's handleError method
+      this.logger.error('Messages import failed', error);
+
+      // Send to Sentry
+      this.exceptionHandlerService.captureExceptions([error], {
+        workspace: { id: workspaceId },
+      });
+
+      // Handle state transitions
       await this.messageImportErrorHandlerService.handleDriverException(
         error,
         MessageImportSyncStep.MESSAGES_IMPORT_ONGOING,

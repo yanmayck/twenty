@@ -8,6 +8,7 @@ import { In, MoreThanOrEqual } from 'typeorm';
 import { InjectCacheStorage } from 'src/engine/core-modules/cache-storage/decorators/cache-storage.decorator';
 import { CacheStorageService } from 'src/engine/core-modules/cache-storage/services/cache-storage.service';
 import { CacheStorageNamespace } from 'src/engine/core-modules/cache-storage/types/cache-storage-namespace.enum';
+import { ExceptionHandlerService } from 'src/engine/core-modules/exception-handler/exception-handler.service';
 import { TwentyORMManager } from 'src/engine/twenty-orm/twenty-orm.manager';
 import { MessageChannelSyncStatusService } from 'src/modules/messaging/common/services/message-channel-sync-status.service';
 import { type MessageChannelMessageAssociationWorkspaceEntity } from 'src/modules/messaging/common/standard-objects/message-channel-message-association.workspace-entity';
@@ -18,6 +19,7 @@ import {
 import { MessageFolderWorkspaceEntity } from 'src/modules/messaging/common/standard-objects/message-folder.workspace-entity';
 import { MessagingMessageCleanerService } from 'src/modules/messaging/message-cleaner/services/messaging-message-cleaner.service';
 import { SyncMessageFoldersService } from 'src/modules/messaging/message-folder-manager/services/sync-message-folders.service';
+import { MessageImportContextService } from 'src/modules/messaging/message-import-manager/services/message-import-context.service';
 import { MessagingAccountAuthenticationService } from 'src/modules/messaging/message-import-manager/services/messaging-account-authentication.service';
 import { MessagingCursorService } from 'src/modules/messaging/message-import-manager/services/messaging-cursor.service';
 import { MessagingGetMessageListService } from 'src/modules/messaging/message-import-manager/services/messaging-get-message-list.service';
@@ -44,12 +46,20 @@ export class MessagingMessageListFetchService {
     private readonly messagingMessagesImportService: MessagingMessagesImportService,
     private readonly messagingAccountAuthenticationService: MessagingAccountAuthenticationService,
     private readonly syncMessageFoldersService: SyncMessageFoldersService,
+    private readonly exceptionHandlerService: ExceptionHandlerService,
+    private readonly messageImportContextService: MessageImportContextService,
   ) {}
 
   public async processMessageListFetch(
     messageChannel: MessageChannelWorkspaceEntity,
     workspaceId: string,
   ) {
+    // Set context once for this request scope
+    this.messageImportContextService.setContext({
+      messageChannelId: messageChannel.id,
+      workspaceId,
+      connectedAccountId: messageChannel.connectedAccount.id,
+    });
     try {
       await this.messageChannelSyncStatusService.markAsMessagesListFetchOngoing(
         [messageChannel.id],
@@ -255,6 +265,15 @@ export class MessagingMessageListFetchService {
         workspaceId,
       );
     } catch (error) {
+      // Error already has context from driver's handleError method
+      this.logger.error('Message list fetch failed', error);
+
+      // Send to Sentry
+      this.exceptionHandlerService.captureExceptions([error], {
+        workspace: { id: workspaceId },
+      });
+
+      // Handle state transitions
       await this.messageImportErrorHandlerService.handleDriverException(
         error,
         MessageImportSyncStep.MESSAGE_LIST_FETCH,

@@ -43,7 +43,6 @@ import { MessageParticipantManagerModule } from 'src/modules/messaging/message-p
   exports: [
     GmailGetMessagesService,
     GmailGetMessageListService,
-
     GmailHandleErrorService,
   ],
 })

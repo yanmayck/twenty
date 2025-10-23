@@ -29,6 +29,7 @@ export class ImapGetMessageListService {
   ) {}
 
   public async getMessageLists({
+    messageChannel,
     connectedAccount,
     messageFolders,
   }: GetMessageListsArgs): Promise<GetMessageListsResponse> {
