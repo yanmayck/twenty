@@ -26,6 +26,8 @@ import {
   MessageImportSyncStep,
 } from 'src/modules/messaging/message-import-manager/services/messaging-import-exception-handler.service';
 import { MessagingMessagesImportService } from 'src/modules/messaging/message-import-manager/services/messaging-messages-import.service';
+import { MessagingProcessFolderActionsService } from 'src/modules/messaging/message-import-manager/services/messaging-process-folder-actions.service';
+import { MessagingProcessGroupEmailActionsService } from 'src/modules/messaging/message-import-manager/services/messaging-process-group-email-actions.service';
 
 const ONE_WEEK_IN_MILLISECONDS = 7 * 24 * 60 * 60 * 1000;
 
@@ -44,6 +46,8 @@ export class MessagingMessageListFetchService {
     private readonly messagingMessagesImportService: MessagingMessagesImportService,
     private readonly messagingAccountAuthenticationService: MessagingAccountAuthenticationService,
     private readonly syncMessageFoldersService: SyncMessageFoldersService,
+    private readonly messagingProcessGroupEmailActionsService: MessagingProcessGroupEmailActionsService,
+    private readonly messagingProcessFolderActionsService: MessagingProcessFolderActionsService,
   ) {}
 
   public async processMessageListFetch(
@@ -78,6 +82,11 @@ export class MessagingMessageListFetchService {
       };
 
       const datasource = await this.twentyORMManager.getDatasource();
+
+      await this.messagingProcessGroupEmailActionsService.processGroupEmailActions(
+        messageChannelWithFreshTokens,
+        workspaceId,
+      );
 
       await this.syncMessageFoldersService.syncMessageFolders({
         workspaceId,
@@ -228,6 +237,12 @@ export class MessagingMessageListFetchService {
 
       this.logger.log(
         `messageChannelId: ${messageChannel.id} Total messages to import count: ${totalMessagesToImportCount}`,
+      );
+
+      await this.messagingProcessFolderActionsService.processFolderActions(
+        messageChannelWithFreshTokens,
+        messageFolders,
+        workspaceId,
       );
 
       if (totalMessagesToImportCount === 0) {
