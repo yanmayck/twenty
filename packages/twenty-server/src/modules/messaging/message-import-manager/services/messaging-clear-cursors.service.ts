@@ -1,6 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
 
-import { type WorkspaceEntityManager } from 'src/engine/twenty-orm/entity-manager/workspace-entity-manager';
 import { TwentyORMManager } from 'src/engine/twenty-orm/twenty-orm.manager';
 import { MessageChannelWorkspaceEntity } from 'src/modules/messaging/common/standard-objects/message-channel.workspace-entity';
 import { MessageFolderWorkspaceEntity } from 'src/modules/messaging/common/standard-objects/message-folder.workspace-entity';
@@ -11,10 +10,7 @@ export class MessagingClearCursorsService {
 
   constructor(private readonly twentyORMManager: TwentyORMManager) {}
 
-  async clearAllCursors(
-    messageChannelId: string,
-    transactionManager?: WorkspaceEntityManager,
-  ): Promise<void> {
+  async clearAllCursors(messageChannelId: string): Promise<void> {
     this.logger.log(
       `MessageChannelId: ${messageChannelId} - Clearing all sync cursors`,
     );
@@ -32,13 +28,11 @@ export class MessagingClearCursorsService {
     await messageChannelRepository.update(
       { id: messageChannelId },
       { syncCursor: '' },
-      transactionManager,
     );
 
     await messageFolderRepository.update(
       { messageChannelId },
       { syncCursor: '' },
-      transactionManager,
     );
 
     this.logger.log(

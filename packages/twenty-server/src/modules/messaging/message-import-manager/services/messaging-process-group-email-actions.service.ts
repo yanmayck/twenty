@@ -61,7 +61,6 @@ export class MessagingProcessGroupEmailActionsService {
 
             await this.messagingClearCursorsService.clearAllCursors(
               messageChannel.id,
-              transactionManager,
             );
 
             this.logger.log(
@@ -73,7 +72,6 @@ export class MessagingProcessGroupEmailActionsService {
           ) {
             await this.messagingClearCursorsService.clearAllCursors(
               messageChannel.id,
-              transactionManager,
             );
 
             this.logger.log(
