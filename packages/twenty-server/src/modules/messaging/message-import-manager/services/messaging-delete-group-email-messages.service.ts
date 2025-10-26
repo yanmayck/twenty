@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 
 import chunk from 'lodash.chunk';
+import { isDefined } from 'twenty-shared/utils';
 import { In } from 'typeorm';
 
 import { TwentyORMGlobalManager } from 'src/engine/twenty-orm/twenty-orm-global.manager';
@@ -70,7 +71,8 @@ export class MessagingDeleteGroupEmailMessagesService {
       });
 
       const groupEmailParticipants = messageParticipants.filter(
-        (participant) => participant.handle && isGroupEmail(participant.handle),
+        (participant) =>
+          isDefined(participant.handle) && isGroupEmail(participant.handle),
       );
 
       if (groupEmailParticipants.length > 0) {
@@ -81,7 +83,7 @@ export class MessagingDeleteGroupEmailMessagesService {
         const messageExternalIdsToDelete = associations
           .filter((assoc) => groupEmailMessageIds.has(assoc.messageId))
           .map((assoc) => assoc.messageExternalId)
-          .filter((externalId): externalId is string => !!externalId);
+          .filter(isDefined);
 
         if (messageExternalIdsToDelete.length > 0) {
           const messageExternalIdsChunks = chunk(

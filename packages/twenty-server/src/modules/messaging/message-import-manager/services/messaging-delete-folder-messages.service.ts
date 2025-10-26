@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 
 import chunk from 'lodash.chunk';
+import { isDefined } from 'twenty-shared/utils';
 import { In } from 'typeorm';
 
 import { TwentyORMGlobalManager } from 'src/engine/twenty-orm/twenty-orm-global.manager';
@@ -67,7 +68,7 @@ export class MessagingDeleteFolderMessagesService {
         if (associations.length > 0) {
           const externalIdsToDelete = associations
             .map((assoc) => assoc.messageExternalId)
-            .filter((externalId): externalId is string => !!externalId);
+            .filter(isDefined);
 
           if (externalIdsToDelete.length > 0) {
             await this.messagingMessageCleanerService.deleteMessagesChannelMessageAssociationsAndRelatedOrphans(
