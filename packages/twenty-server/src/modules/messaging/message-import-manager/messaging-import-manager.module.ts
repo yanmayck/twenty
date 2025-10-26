@@ -109,6 +109,8 @@ import { MessagingMonitoringModule } from 'src/modules/messaging/monitoring/mess
     MessagingMessageListFetchCronCommand,
     MessagingMessagesImportCronCommand,
     MessagingOngoingStaleCronCommand,
+    MessagingProcessGroupEmailActionsService,
+    MessagingProcessFolderActionsService,
   ],
 })
 export class MessagingImportManagerModule {}
