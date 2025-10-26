@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 
 import { ConnectedAccountProvider } from 'twenty-shared/types';
 import { isDefined } from 'twenty-shared/utils';
@@ -15,6 +15,8 @@ import { GmailGetAllFoldersService } from 'src/modules/messaging/message-folder-
 import { ImapGetAllFoldersService } from 'src/modules/messaging/message-folder-manager/drivers/imap/imap-get-all-folders.service';
 import { MicrosoftGetAllFoldersService } from 'src/modules/messaging/message-folder-manager/drivers/microsoft/microsoft-get-all-folders.service';
 import { MessageFolderName } from 'src/modules/messaging/message-import-manager/drivers/microsoft/types/folders';
+import { MessagingProcessFolderActionsService } from 'src/modules/messaging/message-import-manager/services/messaging-process-folder-actions.service';
+import { MessagingProcessGroupEmailActionsService } from 'src/modules/messaging/message-import-manager/services/messaging-process-group-email-actions.service';
 
 type SyncMessageFoldersInput = {
   workspaceId: string;
@@ -40,11 +42,15 @@ type MessageFolderToUpdate = Partial<
 
 @Injectable()
 export class SyncMessageFoldersService {
+  private readonly logger = new Logger(SyncMessageFoldersService.name);
+
   constructor(
     private readonly twentyORMGlobalManager: TwentyORMGlobalManager,
     private readonly gmailGetAllFoldersService: GmailGetAllFoldersService,
     private readonly microsoftGetAllFoldersService: MicrosoftGetAllFoldersService,
     private readonly imapGetAllFoldersService: ImapGetAllFoldersService,
+    private readonly messagingProcessGroupEmailActionsService: MessagingProcessGroupEmailActionsService,
+    private readonly messagingProcessFolderActionsService: MessagingProcessFolderActionsService,
   ) {}
 
   async syncMessageFolders(input: SyncMessageFoldersInput): Promise<void> {
@@ -58,6 +64,45 @@ export class SyncMessageFoldersService {
       folders,
       manager,
     });
+
+    const messageChannelRepository =
+      await this.twentyORMGlobalManager.getRepositoryForWorkspace<MessageChannelWorkspaceEntity>(
+        workspaceId,
+        'messageChannel',
+      );
+
+    const messageChannel = await messageChannelRepository.findOne({
+      where: { id: messageChannelId },
+    });
+
+    if (!isDefined(messageChannel)) {
+      this.logger.error(
+        `WorkspaceId: ${workspaceId}, MessageChannelId: ${messageChannelId} - Message channel not found after folder sync`,
+      );
+
+      return;
+    }
+
+    await this.messagingProcessGroupEmailActionsService.processGroupEmailActions(
+      messageChannel,
+      workspaceId,
+    );
+
+    const messageFolderRepository =
+      await this.twentyORMGlobalManager.getRepositoryForWorkspace<MessageFolderWorkspaceEntity>(
+        workspaceId,
+        'messageFolder',
+      );
+
+    const messageFolders = await messageFolderRepository.find({
+      where: { messageChannelId },
+    });
+
+    await this.messagingProcessFolderActionsService.processFolderActions(
+      messageChannel,
+      messageFolders,
+      workspaceId,
+    );
   }
 
   private async upsertDiscoveredFolders({
