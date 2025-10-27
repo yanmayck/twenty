@@ -103,6 +103,19 @@ export class MessageChannelUpdateOnePreQueryHook
       );
     }
 
+    const excludeGroupEmailsChanged =
+      payload.data.excludeGroupEmails !== messageChannel.excludeGroupEmails;
+
+    if (excludeGroupEmailsChanged) {
+      await this.messagingProcessGroupEmailActionsService.markMessageChannelAsPendingGroupEmailsAction(
+        messageChannel,
+        workspace.id,
+        payload.data.excludeGroupEmails
+          ? MessageChannelPendingGroupEmailsAction.GROUP_EMAILS_DELETION
+          : MessageChannelPendingGroupEmailsAction.GROUP_EMAILS_IMPORT,
+      );
+    }
+
     return payload;
   }
 }

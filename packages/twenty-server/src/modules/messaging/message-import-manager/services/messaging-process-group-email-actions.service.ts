@@ -23,6 +23,26 @@ export class MessagingProcessGroupEmailActionsService {
     private readonly messagingClearCursorsService: MessagingClearCursorsService,
   ) {}
 
+  async markMessageChannelAsPendingGroupEmailsAction(
+    messageChannel: MessageChannelWorkspaceEntity,
+    workspaceId: string,
+    pendingGroupEmailsAction: MessageChannelPendingGroupEmailsAction,
+  ): Promise<void> {
+    const messageChannelRepository =
+      await this.twentyORMManager.getRepository<MessageChannelWorkspaceEntity>(
+        'messageChannel',
+      );
+
+    await messageChannelRepository.update(
+      { id: messageChannel.id },
+      { pendingGroupEmailsAction },
+    );
+
+    this.logger.log(
+      `WorkspaceId: ${workspaceId}, MessageChannelId: ${messageChannel.id} - Marked message channel as pending group emails action: ${pendingGroupEmailsAction}`,
+    );
+  }
+
   async processGroupEmailActions(
     messageChannel: MessageChannelWorkspaceEntity,
     workspaceId: string,
