@@ -103,16 +103,6 @@ export class MessageChannelUpdateOnePreQueryHook
       );
     }
 
-    const excludeGroupEmailsChanged =
-      payload.data.excludeGroupEmails !== messageChannel.excludeGroupEmails;
-
-    if (excludeGroupEmailsChanged) {
-      await this.messagingProcessGroupEmailActionsService.processGroupEmailActions(
-        messageChannel,
-        workspace.id,
-      );
-    }
-
     return payload;
   }
 }
