@@ -14,8 +14,11 @@ import { restoreManyOperationFactory } from 'test/integration/graphql/utils/rest
 import { restoreOneOperationFactory } from 'test/integration/graphql/utils/restore-one-operation-factory.util';
 import { updateManyOperationFactory } from 'test/integration/graphql/utils/update-many-operation-factory.util';
 import { updateOneOperationFactory } from 'test/integration/graphql/utils/update-one-operation-factory.util';
+import { updateFeatureFlag } from 'test/integration/metadata/suites/utils/update-feature-flag.util';
 import { makeRestAPIRequest } from 'test/integration/rest/utils/make-rest-api-request.util';
 import { deleteAllRecords } from 'test/integration/utils/delete-all-records';
+
+import { FeatureFlagKey } from 'src/engine/core-modules/feature-flag/enums/feature-flag-key.enum';
 
 // Pre-generated constant UUIDs for consistent snapshots
 const TEST_COMMON_API_IDS = {
@@ -156,6 +159,12 @@ describe('Common API Feature Flag Comparison (IS_COMMON_API_ENABLED)', () => {
 
   beforeAll(async () => {
     await deleteAllRecords('person');
+
+    await updateFeatureFlag({
+      expectToFail: false,
+      featureFlag: FeatureFlagKey.IS_COMMON_API_ENABLED,
+      value: true,
+    });
   });
 
   afterAll(async () => {
