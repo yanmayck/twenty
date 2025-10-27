@@ -2,11 +2,11 @@ import { Injectable } from '@nestjs/common';
 
 import { ObjectRecord } from 'twenty-shared/types';
 
+import { CommonFindManyQueryRunnerService } from 'src/engine/api/common/common-query-runners/common-find-many-query-runner.service';
 import {
   PageInfo,
   RestApiBaseHandler,
 } from 'src/engine/api/rest/core/handlers/rest-api-base.handler';
-import { CommonFindManyQueryRunnerService } from 'src/engine/api/common/common-query-runners/common-find-many-query-runner.service';
 import { parseDepthRestRequest } from 'src/engine/api/rest/input-request-parsers/depth-parser-utils/parse-depth-rest-request.util';
 import { parseEndingBeforeRestRequest } from 'src/engine/api/rest/input-request-parsers/ending-before-parser-utils/parse-ending-before-rest-request.util';
 import { parseFilterRestRequest } from 'src/engine/api/rest/input-request-parsers/filter-parser-utils/parse-filter-rest-request.util';
@@ -74,7 +74,7 @@ export class RestApiFindManyHandler extends RestApiBaseHandler {
       data: {
         [objectNamePlural]: records,
       },
-      totalCount: aggregatedValues.totalCount,
+      totalCount: Number(aggregatedValues.totalCount),
       pageInfo,
     };
   }
