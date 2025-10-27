@@ -1,0 +1,940 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Common API Feature Flag Comparison (IS_COMMON_API_ENABLED) GraphQL API Operations CreateMany should create many people with all fields 1`] = `
+{
+  "data": {
+    "createPeople": [
+      {
+        "avatarUrl": "https://example.com/avatar-create-many-gql-1.jpg",
+        "city": "City-create-many-gql-1",
+        "createdAt": Any<String>,
+        "deletedAt": null,
+        "emails": {
+          "additionalEmails": [],
+          "primaryEmail": "test-create-many-gql-1@example.com",
+        },
+        "id": "027a491f-a2a8-49b3-b886-99c793f5ca66",
+        "intro": "Intro text for create-many-gql-1",
+        "jobTitle": "Job-create-many-gql-1",
+        "name": {
+          "firstName": "First-create-many-gql-1",
+          "lastName": "Last-create-many-gql-1",
+        },
+        "phones": {
+          "additionalPhones": null,
+          "primaryPhoneCallingCode": "+33",
+          "primaryPhoneCountryCode": "FR",
+          "primaryPhoneNumber": "123456789",
+        },
+        "searchVector": "'+33':16 '+33123456789':17 '0123456789':19 '1':6,12,25 '123456789':15 '33123456789':18 'create':3,9,22 'example.com':14 'first':2 'first-create-many-gql':1 'gql':5,11,24 'job':21 'job-create-many-gql':20 'last':8 'last-create-many-gql':7 'many':4,10,23 'test-create-many-gql-1@example.com':13",
+        "whatsapp": {
+          "additionalPhones": null,
+          "primaryPhoneCallingCode": "33",
+          "primaryPhoneCountryCode": "FR",
+          "primaryPhoneNumber": "",
+        },
+      },
+      {
+        "avatarUrl": "https://example.com/avatar-create-many-gql-2.jpg",
+        "city": "City-create-many-gql-2",
+        "createdAt": Any<String>,
+        "deletedAt": null,
+        "emails": {
+          "additionalEmails": [],
+          "primaryEmail": "test-create-many-gql-2@example.com",
+        },
+        "id": "027a491f-a2a8-49b3-b886-99c793f5ca67",
+        "intro": "Intro text for create-many-gql-2",
+        "jobTitle": "Job-create-many-gql-2",
+        "name": {
+          "firstName": "First-create-many-gql-2",
+          "lastName": "Last-create-many-gql-2",
+        },
+        "phones": {
+          "additionalPhones": null,
+          "primaryPhoneCallingCode": "+33",
+          "primaryPhoneCountryCode": "FR",
+          "primaryPhoneNumber": "123456789",
+        },
+        "searchVector": "'+33':16 '+33123456789':17 '0123456789':19 '123456789':15 '2':6,12,25 '33123456789':18 'create':3,9,22 'example.com':14 'first':2 'first-create-many-gql':1 'gql':5,11,24 'job':21 'job-create-many-gql':20 'last':8 'last-create-many-gql':7 'many':4,10,23 'test-create-many-gql-2@example.com':13",
+        "whatsapp": {
+          "additionalPhones": null,
+          "primaryPhoneCallingCode": "33",
+          "primaryPhoneCountryCode": "FR",
+          "primaryPhoneNumber": "",
+        },
+      },
+    ],
+  },
+}
+`;
+
+exports[`Common API Feature Flag Comparison (IS_COMMON_API_ENABLED) GraphQL API Operations CreateOne should create one person with all fields 1`] = `
+{
+  "data": {
+    "createPerson": {
+      "avatarUrl": "https://example.com/avatar-create-one-gql.jpg",
+      "city": "City-create-one-gql",
+      "createdAt": Any<String>,
+      "deletedAt": null,
+      "emails": {
+        "additionalEmails": [],
+        "primaryEmail": "test-create-one-gql@example.com",
+      },
+      "id": "027a491f-a2a8-49b3-b886-99c793f5ca65",
+      "intro": "Intro text for create-one-gql",
+      "jobTitle": "Job-create-one-gql",
+      "name": {
+        "firstName": "First-create-one-gql",
+        "lastName": "Last-create-one-gql",
+      },
+      "phones": {
+        "additionalPhones": [],
+        "primaryPhoneCallingCode": "+33",
+        "primaryPhoneCountryCode": "FR",
+        "primaryPhoneNumber": "+33123456789",
+      },
+      "searchVector": "'+33':14,15 '+33123456789':13,16,18,20 '0':19 '33':17 'create':3,8,23 'example.com':12 'first':2 'first-create-one-gql':1 'gql':5,10,25 'job':22 'job-create-one-gql':21 'last':7 'last-create-one-gql':6 'one':4,9,24 'test-create-one-gql@example.com':11",
+      "whatsapp": {
+        "additionalPhones": null,
+        "primaryPhoneCallingCode": "33",
+        "primaryPhoneCountryCode": "FR",
+        "primaryPhoneNumber": "",
+      },
+    },
+  },
+}
+`;
+
+exports[`Common API Feature Flag Comparison (IS_COMMON_API_ENABLED) GraphQL API Operations DeleteMany (Soft Delete) should soft delete many people 1`] = `
+{
+  "data": {
+    "deletePeople": [
+      {
+        "avatarUrl": "https://example.com/avatar-delete-many-gql-1.jpg",
+        "city": "City-delete-many-gql-1",
+        "createdAt": Any<String>,
+        "deletedAt": Any<String>,
+        "emails": {
+          "additionalEmails": [],
+          "primaryEmail": "test-delete-many-gql-1@example.com",
+        },
+        "id": "027a491f-a2a8-49b3-b886-99c793f5ca75",
+        "intro": "Intro text for delete-many-gql-1",
+        "jobTitle": "Job-delete-many-gql-1",
+        "name": {
+          "firstName": "First-delete-many-gql-1",
+          "lastName": "Last-delete-many-gql-1",
+        },
+        "phones": {
+          "additionalPhones": null,
+          "primaryPhoneCallingCode": "+33",
+          "primaryPhoneCountryCode": "FR",
+          "primaryPhoneNumber": "123456789",
+        },
+        "searchVector": "'+33':16 '+33123456789':17 '0123456789':19 '1':6,12,25 '123456789':15 '33123456789':18 'delete':3,9,22 'example.com':14 'first':2 'first-delete-many-gql':1 'gql':5,11,24 'job':21 'job-delete-many-gql':20 'last':8 'last-delete-many-gql':7 'many':4,10,23 'test-delete-many-gql-1@example.com':13",
+        "whatsapp": {
+          "additionalPhones": null,
+          "primaryPhoneCallingCode": "33",
+          "primaryPhoneCountryCode": "FR",
+          "primaryPhoneNumber": "",
+        },
+      },
+      {
+        "avatarUrl": "https://example.com/avatar-delete-many-gql-2.jpg",
+        "city": "City-delete-many-gql-2",
+        "createdAt": Any<String>,
+        "deletedAt": Any<String>,
+        "emails": {
+          "additionalEmails": [],
+          "primaryEmail": "test-delete-many-gql-2@example.com",
+        },
+        "id": "027a491f-a2a8-49b3-b886-99c793f5ca76",
+        "intro": "Intro text for delete-many-gql-2",
+        "jobTitle": "Job-delete-many-gql-2",
+        "name": {
+          "firstName": "First-delete-many-gql-2",
+          "lastName": "Last-delete-many-gql-2",
+        },
+        "phones": {
+          "additionalPhones": null,
+          "primaryPhoneCallingCode": "+33",
+          "primaryPhoneCountryCode": "FR",
+          "primaryPhoneNumber": "123456789",
+        },
+        "searchVector": "'+33':16 '+33123456789':17 '0123456789':19 '123456789':15 '2':6,12,25 '33123456789':18 'delete':3,9,22 'example.com':14 'first':2 'first-delete-many-gql':1 'gql':5,11,24 'job':21 'job-delete-many-gql':20 'last':8 'last-delete-many-gql':7 'many':4,10,23 'test-delete-many-gql-2@example.com':13",
+        "whatsapp": {
+          "additionalPhones": null,
+          "primaryPhoneCallingCode": "33",
+          "primaryPhoneCountryCode": "FR",
+          "primaryPhoneNumber": "",
+        },
+      },
+    ],
+  },
+}
+`;
+
+exports[`Common API Feature Flag Comparison (IS_COMMON_API_ENABLED) GraphQL API Operations DeleteOne (Soft Delete) should soft delete one person 1`] = `
+{
+  "data": {
+    "deletePerson": {
+      "avatarUrl": "https://example.com/avatar-delete-one-gql.jpg",
+      "city": "City-delete-one-gql",
+      "createdAt": Any<String>,
+      "deletedAt": Any<String>,
+      "emails": {
+        "additionalEmails": [],
+        "primaryEmail": "test-delete-one-gql@example.com",
+      },
+      "id": "027a491f-a2a8-49b3-b886-99c793f5ca74",
+      "intro": "Intro text for delete-one-gql",
+      "jobTitle": "Job-delete-one-gql",
+      "name": {
+        "firstName": "First-delete-one-gql",
+        "lastName": "Last-delete-one-gql",
+      },
+      "phones": {
+        "additionalPhones": [],
+        "primaryPhoneCallingCode": "+33",
+        "primaryPhoneCountryCode": "FR",
+        "primaryPhoneNumber": "+33123456789",
+      },
+      "searchVector": "'+33':14,15 '+33123456789':13,16,18,20 '0':19 '33':17 'delete':3,8,23 'example.com':12 'first':2 'first-delete-one-gql':1 'gql':5,10,25 'job':22 'job-delete-one-gql':21 'last':7 'last-delete-one-gql':6 'one':4,9,24 'test-delete-one-gql@example.com':11",
+      "whatsapp": {
+        "additionalPhones": null,
+        "primaryPhoneCallingCode": "33",
+        "primaryPhoneCountryCode": "FR",
+        "primaryPhoneNumber": "",
+      },
+    },
+  },
+}
+`;
+
+exports[`Common API Feature Flag Comparison (IS_COMMON_API_ENABLED) GraphQL API Operations DestroyMany (Hard Delete) should hard delete many people 1`] = `
+{
+  "data": {
+    "destroyPeople": [
+      {
+        "avatarUrl": "https://example.com/avatar-destroy-many-gql-1.jpg",
+        "city": "City-destroy-many-gql-1",
+        "createdAt": Any<String>,
+        "deletedAt": null,
+        "emails": {
+          "additionalEmails": [],
+          "primaryEmail": "test-destroy-many-gql-1@example.com",
+        },
+        "id": "027a491f-a2a8-49b3-b886-99c793f5ca78",
+        "intro": "Intro text for destroy-many-gql-1",
+        "jobTitle": "Job-destroy-many-gql-1",
+        "name": {
+          "firstName": "First-destroy-many-gql-1",
+          "lastName": "Last-destroy-many-gql-1",
+        },
+        "phones": {
+          "additionalPhones": null,
+          "primaryPhoneCallingCode": "+33",
+          "primaryPhoneCountryCode": "FR",
+          "primaryPhoneNumber": "123456789",
+        },
+        "searchVector": "'+33':16 '+33123456789':17 '0123456789':19 '1':6,12,25 '123456789':15 '33123456789':18 'destroy':3,9,22 'example.com':14 'first':2 'first-destroy-many-gql':1 'gql':5,11,24 'job':21 'job-destroy-many-gql':20 'last':8 'last-destroy-many-gql':7 'many':4,10,23 'test-destroy-many-gql-1@example.com':13",
+        "whatsapp": {
+          "additionalPhones": null,
+          "primaryPhoneCallingCode": "33",
+          "primaryPhoneCountryCode": "FR",
+          "primaryPhoneNumber": "",
+        },
+      },
+      {
+        "avatarUrl": "https://example.com/avatar-destroy-many-gql-2.jpg",
+        "city": "City-destroy-many-gql-2",
+        "createdAt": Any<String>,
+        "deletedAt": null,
+        "emails": {
+          "additionalEmails": [],
+          "primaryEmail": "test-destroy-many-gql-2@example.com",
+        },
+        "id": "027a491f-a2a8-49b3-b886-99c793f5ca79",
+        "intro": "Intro text for destroy-many-gql-2",
+        "jobTitle": "Job-destroy-many-gql-2",
+        "name": {
+          "firstName": "First-destroy-many-gql-2",
+          "lastName": "Last-destroy-many-gql-2",
+        },
+        "phones": {
+          "additionalPhones": null,
+          "primaryPhoneCallingCode": "+33",
+          "primaryPhoneCountryCode": "FR",
+          "primaryPhoneNumber": "123456789",
+        },
+        "searchVector": "'+33':16 '+33123456789':17 '0123456789':19 '123456789':15 '2':6,12,25 '33123456789':18 'destroy':3,9,22 'example.com':14 'first':2 'first-destroy-many-gql':1 'gql':5,11,24 'job':21 'job-destroy-many-gql':20 'last':8 'last-destroy-many-gql':7 'many':4,10,23 'test-destroy-many-gql-2@example.com':13",
+        "whatsapp": {
+          "additionalPhones": null,
+          "primaryPhoneCallingCode": "33",
+          "primaryPhoneCountryCode": "FR",
+          "primaryPhoneNumber": "",
+        },
+      },
+    ],
+  },
+}
+`;
+
+exports[`Common API Feature Flag Comparison (IS_COMMON_API_ENABLED) GraphQL API Operations DestroyOne (Hard Delete) should hard delete one person 1`] = `
+{
+  "data": {
+    "destroyPerson": {
+      "avatarUrl": "https://example.com/avatar-destroy-one-gql.jpg",
+      "city": "City-destroy-one-gql",
+      "createdAt": Any<String>,
+      "deletedAt": null,
+      "emails": {
+        "additionalEmails": [],
+        "primaryEmail": "test-destroy-one-gql@example.com",
+      },
+      "id": "027a491f-a2a8-49b3-b886-99c793f5ca77",
+      "intro": "Intro text for destroy-one-gql",
+      "jobTitle": "Job-destroy-one-gql",
+      "name": {
+        "firstName": "First-destroy-one-gql",
+        "lastName": "Last-destroy-one-gql",
+      },
+      "phones": {
+        "additionalPhones": [],
+        "primaryPhoneCallingCode": "+33",
+        "primaryPhoneCountryCode": "FR",
+        "primaryPhoneNumber": "+33123456789",
+      },
+      "searchVector": "'+33':14,15 '+33123456789':13,16,18,20 '0':19 '33':17 'destroy':3,8,23 'example.com':12 'first':2 'first-destroy-one-gql':1 'gql':5,10,25 'job':22 'job-destroy-one-gql':21 'last':7 'last-destroy-one-gql':6 'one':4,9,24 'test-destroy-one-gql@example.com':11",
+      "whatsapp": {
+        "additionalPhones": null,
+        "primaryPhoneCallingCode": "33",
+        "primaryPhoneCountryCode": "FR",
+        "primaryPhoneNumber": "",
+      },
+    },
+  },
+}
+`;
+
+exports[`Common API Feature Flag Comparison (IS_COMMON_API_ENABLED) GraphQL API Operations FindDuplicates should find duplicates by ids 1`] = `
+{
+  "data": {
+    "personDuplicates": ArrayContaining [
+      {
+        "edges": Any<Array>,
+        "pageInfo": {
+          "endCursor": Any<String>,
+          "hasNextPage": Any<Boolean>,
+          "hasPreviousPage": Any<Boolean>,
+          "startCursor": Any<String>,
+        },
+        "totalCount": Any<Number>,
+      },
+    ],
+  },
+}
+`;
+
+exports[`Common API Feature Flag Comparison (IS_COMMON_API_ENABLED) GraphQL API Operations FindMany should find many people with all fields, filters, ordering, and pagination 1`] = `
+{
+  "data": {
+    "people": {
+      "edges": [
+        {
+          "cursor": Any<String>,
+          "node": {
+            "avatarUrl": "https://example.com/avatar-find-many-gql-1.jpg",
+            "city": "City-find-many-gql-1",
+            "createdAt": Any<String>,
+            "deletedAt": null,
+            "emails": {
+              "additionalEmails": [],
+              "primaryEmail": "test-find-many-gql-1@example.com",
+            },
+            "id": "027a491f-a2a8-49b3-b886-99c793f5ca69",
+            "intro": "Intro text for find-many-gql-1",
+            "jobTitle": "Job-find-many-gql-1",
+            "name": {
+              "firstName": "First-find-many-gql-1",
+              "lastName": "Last-find-many-gql-1",
+            },
+            "phones": {
+              "additionalPhones": null,
+              "primaryPhoneCallingCode": "+33",
+              "primaryPhoneCountryCode": "FR",
+              "primaryPhoneNumber": "123456789",
+            },
+            "searchVector": "'+33':16 '+33123456789':17 '0123456789':19 '1':6,12,25 '123456789':15 '33123456789':18 'example.com':14 'find':3,9,22 'first':2 'first-find-many-gql':1 'gql':5,11,24 'job':21 'job-find-many-gql':20 'last':8 'last-find-many-gql':7 'many':4,10,23 'test-find-many-gql-1@example.com':13",
+            "whatsapp": {
+              "additionalPhones": null,
+              "primaryPhoneCallingCode": "33",
+              "primaryPhoneCountryCode": "FR",
+              "primaryPhoneNumber": "",
+            },
+          },
+        },
+        {
+          "cursor": Any<String>,
+          "node": {
+            "avatarUrl": "https://example.com/avatar-find-many-gql-2.jpg",
+            "city": "City-find-many-gql-2",
+            "createdAt": Any<String>,
+            "deletedAt": null,
+            "emails": {
+              "additionalEmails": [],
+              "primaryEmail": "test-find-many-gql-2@example.com",
+            },
+            "id": "027a491f-a2a8-49b3-b886-99c793f5ca70",
+            "intro": "Intro text for find-many-gql-2",
+            "jobTitle": "Job-find-many-gql-2",
+            "name": {
+              "firstName": "First-find-many-gql-2",
+              "lastName": "Last-find-many-gql-2",
+            },
+            "phones": {
+              "additionalPhones": null,
+              "primaryPhoneCallingCode": "+33",
+              "primaryPhoneCountryCode": "FR",
+              "primaryPhoneNumber": "123456789",
+            },
+            "searchVector": "'+33':16 '+33123456789':17 '0123456789':19 '123456789':15 '2':6,12,25 '33123456789':18 'example.com':14 'find':3,9,22 'first':2 'first-find-many-gql':1 'gql':5,11,24 'job':21 'job-find-many-gql':20 'last':8 'last-find-many-gql':7 'many':4,10,23 'test-find-many-gql-2@example.com':13",
+            "whatsapp": {
+              "additionalPhones": null,
+              "primaryPhoneCallingCode": "33",
+              "primaryPhoneCountryCode": "FR",
+              "primaryPhoneNumber": "",
+            },
+          },
+        },
+      ],
+      "pageInfo": {
+        "endCursor": Any<String>,
+        "hasNextPage": false,
+        "hasPreviousPage": false,
+        "startCursor": Any<String>,
+      },
+    },
+  },
+}
+`;
+
+exports[`Common API Feature Flag Comparison (IS_COMMON_API_ENABLED) GraphQL API Operations FindOne should find one person with all fields and filters 1`] = `
+{
+  "data": {
+    "person": {
+      "avatarUrl": "https://example.com/avatar-find-one-gql.jpg",
+      "city": "City-find-one-gql",
+      "createdAt": Any<String>,
+      "deletedAt": null,
+      "emails": {
+        "additionalEmails": [],
+        "primaryEmail": "test-find-one-gql@example.com",
+      },
+      "id": "027a491f-a2a8-49b3-b886-99c793f5ca68",
+      "intro": "Intro text for find-one-gql",
+      "jobTitle": "Job-find-one-gql",
+      "name": {
+        "firstName": "First-find-one-gql",
+        "lastName": "Last-find-one-gql",
+      },
+      "phones": {
+        "additionalPhones": [],
+        "primaryPhoneCallingCode": "+33",
+        "primaryPhoneCountryCode": "FR",
+        "primaryPhoneNumber": "+33123456789",
+      },
+      "searchVector": "'+33':14,15 '+33123456789':13,16,18,20 '0':19 '33':17 'example.com':12 'find':3,8,23 'first':2 'first-find-one-gql':1 'gql':5,10,25 'job':22 'job-find-one-gql':21 'last':7 'last-find-one-gql':6 'one':4,9,24 'test-find-one-gql@example.com':11",
+      "whatsapp": {
+        "additionalPhones": null,
+        "primaryPhoneCallingCode": "33",
+        "primaryPhoneCountryCode": "FR",
+        "primaryPhoneNumber": "",
+      },
+    },
+  },
+}
+`;
+
+exports[`Common API Feature Flag Comparison (IS_COMMON_API_ENABLED) GraphQL API Operations MergeMany should handle merge with dryRun mode 1`] = `
+{
+  "data": {
+    "mergePeople": {
+      "avatarUrl": "https://example.com/avatar-merge-many-gql-1.jpg",
+      "city": "City-merge-many-gql-1",
+      "createdAt": Any<String>,
+      "deletedAt": Any<String>,
+      "emails": {
+        "additionalEmails": [
+          "merge1-alt@example.com",
+          "merge2@example.com",
+          "merge2-alt@example.com",
+        ],
+        "primaryEmail": "merge1@example.com",
+      },
+      "id": Any<String>,
+      "intro": "Intro text for merge-many-gql-1",
+      "jobTitle": "Job-merge-many-gql-1",
+      "name": {
+        "firstName": "First-merge-many-gql-1",
+        "lastName": "Last-merge-many-gql-1",
+      },
+      "phones": {
+        "additionalPhones": null,
+        "primaryPhoneCallingCode": "+33",
+        "primaryPhoneCountryCode": "FR",
+        "primaryPhoneNumber": "123456789",
+      },
+      "searchVector": "'+33':16 '+33123456789':17 '0123456789':19 '1':6,12,25 '123456789':15 '33123456789':18 'example.com':14 'first':2 'first-merge-many-gql':1 'gql':5,11,24 'job':21 'job-merge-many-gql':20 'last':8 'last-merge-many-gql':7 'many':4,10,23 'merge':3,9,22 'merge1@example.com':13",
+      "whatsapp": {
+        "additionalPhones": null,
+        "primaryPhoneCallingCode": "",
+        "primaryPhoneCountryCode": null,
+        "primaryPhoneNumber": "",
+      },
+    },
+  },
+}
+`;
+
+exports[`Common API Feature Flag Comparison (IS_COMMON_API_ENABLED) GraphQL API Operations MergeMany should merge many people into one 1`] = `
+{
+  "data": {
+    "mergePeople": {
+      "avatarUrl": "https://example.com/avatar-merge-many-gql-1.jpg",
+      "city": "City-merge-many-gql-1",
+      "createdAt": Any<String>,
+      "deletedAt": null,
+      "emails": {
+        "additionalEmails": ArrayContaining [
+          "merge2@example.com",
+          "merge1-alt@example.com",
+          "merge2-alt@example.com",
+        ],
+        "primaryEmail": "merge1@example.com",
+      },
+      "id": Any<String>,
+      "intro": "Intro text for merge-many-gql-1",
+      "jobTitle": "Job-merge-many-gql-1",
+      "name": {
+        "firstName": "First-merge-many-gql-1",
+        "lastName": "Last-merge-many-gql-1",
+      },
+      "phones": {
+        "additionalPhones": null,
+        "primaryPhoneCallingCode": "+33",
+        "primaryPhoneCountryCode": "FR",
+        "primaryPhoneNumber": "123456789",
+      },
+      "searchVector": "'+33':16 '+33123456789':17 '0123456789':19 '1':6,12,25 '123456789':15 '33123456789':18 'example.com':14 'first':2 'first-merge-many-gql':1 'gql':5,11,24 'job':21 'job-merge-many-gql':20 'last':8 'last-merge-many-gql':7 'many':4,10,23 'merge':3,9,22 'merge1@example.com':13",
+      "whatsapp": {
+        "additionalPhones": null,
+        "primaryPhoneCallingCode": "",
+        "primaryPhoneCountryCode": null,
+        "primaryPhoneNumber": "",
+      },
+    },
+  },
+}
+`;
+
+exports[`Common API Feature Flag Comparison (IS_COMMON_API_ENABLED) GraphQL API Operations RestoreMany should restore many soft-deleted people 1`] = `
+{
+  "data": {
+    "restorePeople": [
+      {
+        "avatarUrl": "https://example.com/avatar-restore-many-gql-1.jpg",
+        "city": "City-restore-many-gql-1",
+        "createdAt": Any<String>,
+        "deletedAt": null,
+        "emails": {
+          "additionalEmails": [],
+          "primaryEmail": "test-restore-many-gql-1@example.com",
+        },
+        "id": "027a491f-a2a8-49b3-b886-99c793f5ca99",
+        "intro": "Intro text for restore-many-gql-1",
+        "jobTitle": "Job-restore-many-gql-1",
+        "name": {
+          "firstName": "First-restore-many-gql-1",
+          "lastName": "Last-restore-many-gql-1",
+        },
+        "phones": {
+          "additionalPhones": null,
+          "primaryPhoneCallingCode": "+33",
+          "primaryPhoneCountryCode": "FR",
+          "primaryPhoneNumber": "123456789",
+        },
+        "searchVector": "'+33':16 '+33123456789':17 '0123456789':19 '1':6,12,25 '123456789':15 '33123456789':18 'example.com':14 'first':2 'first-restore-many-gql':1 'gql':5,11,24 'job':21 'job-restore-many-gql':20 'last':8 'last-restore-many-gql':7 'many':4,10,23 'restore':3,9,22 'test-restore-many-gql-1@example.com':13",
+        "whatsapp": {
+          "additionalPhones": null,
+          "primaryPhoneCallingCode": "33",
+          "primaryPhoneCountryCode": "FR",
+          "primaryPhoneNumber": "",
+        },
+      },
+      {
+        "avatarUrl": "https://example.com/avatar-restore-many-gql-2.jpg",
+        "city": "City-restore-many-gql-2",
+        "createdAt": Any<String>,
+        "deletedAt": null,
+        "emails": {
+          "additionalEmails": [],
+          "primaryEmail": "test-restore-many-gql-2@example.com",
+        },
+        "id": "027a491f-a2a8-49b3-b886-99c793f5caa0",
+        "intro": "Intro text for restore-many-gql-2",
+        "jobTitle": "Job-restore-many-gql-2",
+        "name": {
+          "firstName": "First-restore-many-gql-2",
+          "lastName": "Last-restore-many-gql-2",
+        },
+        "phones": {
+          "additionalPhones": null,
+          "primaryPhoneCallingCode": "+33",
+          "primaryPhoneCountryCode": "FR",
+          "primaryPhoneNumber": "123456789",
+        },
+        "searchVector": "'+33':16 '+33123456789':17 '0123456789':19 '123456789':15 '2':6,12,25 '33123456789':18 'example.com':14 'first':2 'first-restore-many-gql':1 'gql':5,11,24 'job':21 'job-restore-many-gql':20 'last':8 'last-restore-many-gql':7 'many':4,10,23 'restore':3,9,22 'test-restore-many-gql-2@example.com':13",
+        "whatsapp": {
+          "additionalPhones": null,
+          "primaryPhoneCallingCode": "33",
+          "primaryPhoneCountryCode": "FR",
+          "primaryPhoneNumber": "",
+        },
+      },
+    ],
+  },
+}
+`;
+
+exports[`Common API Feature Flag Comparison (IS_COMMON_API_ENABLED) GraphQL API Operations RestoreOne should restore one soft-deleted person 1`] = `
+{
+  "data": {
+    "restorePerson": {
+      "avatarUrl": "https://example.com/avatar-restore-one-gql.jpg",
+      "city": "City-restore-one-gql",
+      "createdAt": Any<String>,
+      "deletedAt": null,
+      "emails": {
+        "additionalEmails": [],
+        "primaryEmail": "test-restore-one-gql@example.com",
+      },
+      "id": "027a491f-a2a8-49b3-b886-99c793f5ca98",
+      "intro": "Intro text for restore-one-gql",
+      "jobTitle": "Job-restore-one-gql",
+      "name": {
+        "firstName": "First-restore-one-gql",
+        "lastName": "Last-restore-one-gql",
+      },
+      "phones": {
+        "additionalPhones": [],
+        "primaryPhoneCallingCode": "+33",
+        "primaryPhoneCountryCode": "FR",
+        "primaryPhoneNumber": "+33123456789",
+      },
+      "searchVector": "'+33':14,15 '+33123456789':13,16,18,20 '0':19 '33':17 'example.com':12 'first':2 'first-restore-one-gql':1 'gql':5,10,25 'job':22 'job-restore-one-gql':21 'last':7 'last-restore-one-gql':6 'one':4,9,24 'restore':3,8,23 'test-restore-one-gql@example.com':11",
+      "whatsapp": {
+        "additionalPhones": null,
+        "primaryPhoneCallingCode": "33",
+        "primaryPhoneCountryCode": "FR",
+        "primaryPhoneNumber": "",
+      },
+    },
+  },
+}
+`;
+
+exports[`Common API Feature Flag Comparison (IS_COMMON_API_ENABLED) GraphQL API Operations UpdateMany should update many people with filters 1`] = `
+{
+  "data": {
+    "updatePeople": [
+      {
+        "avatarUrl": "https://example.com/avatar-update-many-gql-1.jpg",
+        "city": "BulkUpdatedCity",
+        "createdAt": Any<String>,
+        "deletedAt": null,
+        "emails": {
+          "additionalEmails": [],
+          "primaryEmail": "test-update-many-gql-1@example.com",
+        },
+        "id": "027a491f-a2a8-49b3-b886-99c793f5ca96",
+        "intro": "Intro text for update-many-gql-1",
+        "jobTitle": "Job-update-many-gql-1",
+        "name": {
+          "firstName": "First-update-many-gql-1",
+          "lastName": "Last-update-many-gql-1",
+        },
+        "phones": {
+          "additionalPhones": null,
+          "primaryPhoneCallingCode": "+33",
+          "primaryPhoneCountryCode": "FR",
+          "primaryPhoneNumber": "123456789",
+        },
+        "searchVector": "'+33':16 '+33123456789':17 '0123456789':19 '1':6,12,25 '123456789':15 '33123456789':18 'example.com':14 'first':2 'first-update-many-gql':1 'gql':5,11,24 'job':21 'job-update-many-gql':20 'last':8 'last-update-many-gql':7 'many':4,10,23 'test-update-many-gql-1@example.com':13 'update':3,9,22",
+        "whatsapp": {
+          "additionalPhones": null,
+          "primaryPhoneCallingCode": "33",
+          "primaryPhoneCountryCode": "FR",
+          "primaryPhoneNumber": "",
+        },
+      },
+      {
+        "avatarUrl": "https://example.com/avatar-update-many-gql-2.jpg",
+        "city": "BulkUpdatedCity",
+        "createdAt": Any<String>,
+        "deletedAt": null,
+        "emails": {
+          "additionalEmails": [],
+          "primaryEmail": "test-update-many-gql-2@example.com",
+        },
+        "id": "027a491f-a2a8-49b3-b886-99c793f5ca97",
+        "intro": "Intro text for update-many-gql-2",
+        "jobTitle": "Job-update-many-gql-2",
+        "name": {
+          "firstName": "First-update-many-gql-2",
+          "lastName": "Last-update-many-gql-2",
+        },
+        "phones": {
+          "additionalPhones": null,
+          "primaryPhoneCallingCode": "+33",
+          "primaryPhoneCountryCode": "FR",
+          "primaryPhoneNumber": "123456789",
+        },
+        "searchVector": "'+33':16 '+33123456789':17 '0123456789':19 '123456789':15 '2':6,12,25 '33123456789':18 'example.com':14 'first':2 'first-update-many-gql':1 'gql':5,11,24 'job':21 'job-update-many-gql':20 'last':8 'last-update-many-gql':7 'many':4,10,23 'test-update-many-gql-2@example.com':13 'update':3,9,22",
+        "whatsapp": {
+          "additionalPhones": null,
+          "primaryPhoneCallingCode": "33",
+          "primaryPhoneCountryCode": "FR",
+          "primaryPhoneNumber": "",
+        },
+      },
+    ],
+  },
+}
+`;
+
+exports[`Common API Feature Flag Comparison (IS_COMMON_API_ENABLED) GraphQL API Operations UpdateOne should update one person with all fields 1`] = `
+{
+  "data": {
+    "updatePerson": {
+      "avatarUrl": "https://example.com/avatar-update-one-gql.jpg",
+      "city": "UpdatedCity",
+      "createdAt": Any<String>,
+      "deletedAt": null,
+      "emails": {
+        "additionalEmails": [],
+        "primaryEmail": "test-update-one-gql@example.com",
+      },
+      "id": "027a491f-a2a8-49b3-b886-99c793f5ca95",
+      "intro": "Intro text for update-one-gql",
+      "jobTitle": "UpdatedTitle",
+      "name": {
+        "firstName": "First-update-one-gql",
+        "lastName": "Last-update-one-gql",
+      },
+      "phones": {
+        "additionalPhones": [],
+        "primaryPhoneCallingCode": "+33",
+        "primaryPhoneCountryCode": "FR",
+        "primaryPhoneNumber": "+33123456789",
+      },
+      "searchVector": "'+33':14,15 '+33123456789':13,16,18,20 '0':19 '33':17 'example.com':12 'first':2 'first-update-one-gql':1 'gql':5,10 'last':7 'last-update-one-gql':6 'one':4,9 'test-update-one-gql@example.com':11 'update':3,8 'updatedtitle':21",
+      "whatsapp": {
+        "additionalPhones": null,
+        "primaryPhoneCallingCode": "33",
+        "primaryPhoneCountryCode": "FR",
+        "primaryPhoneNumber": "",
+      },
+    },
+  },
+}
+`;
+
+exports[`Common API Feature Flag Comparison (IS_COMMON_API_ENABLED) REST API Operations Create Many (POST batch) should create many people via REST with all fields 1`] = `
+{
+  "data": {
+    "createPeople": [
+      {
+        "avatarUrl": "https://example.com/avatar-rest-create-many-1.jpg",
+        "city": "City-rest-create-many-1",
+        "companyId": null,
+        "createdAt": "2025-10-27T09:07:09.574Z",
+        "deletedAt": null,
+        "id": "027a491f-a2a8-49b3-b886-99c793f5ca81",
+        "intro": "Intro text for rest-create-many-1",
+        "jobTitle": "Job-rest-create-many-1",
+        "performanceRating": null,
+        "position": 0,
+        "searchVector": "'+33':16 '+33123456789':17 '0123456789':19 '1':6,12,25 '123456789':15 '33123456789':18 'create':4,10,23 'example.com':14 'first':2 'first-rest-create-many':1 'job':21 'job-rest-create-many':20 'last':8 'last-rest-create-many':7 'many':5,11,24 'rest':3,9,22 'test-rest-create-many-1@example.com':13",
+        "updatedAt": "2025-10-27T09:07:09.574Z",
+        "workPreference": null,
+      },
+      {
+        "avatarUrl": "https://example.com/avatar-rest-create-many-2.jpg",
+        "city": "City-rest-create-many-2",
+        "companyId": null,
+        "createdAt": "2025-10-27T09:07:09.574Z",
+        "deletedAt": null,
+        "id": "027a491f-a2a8-49b3-b886-99c793f5ca82",
+        "intro": "Intro text for rest-create-many-2",
+        "jobTitle": "Job-rest-create-many-2",
+        "performanceRating": null,
+        "position": -1,
+        "searchVector": "'+33':16 '+33123456789':17 '0123456789':19 '123456789':15 '2':6,12,25 '33123456789':18 'create':4,10,23 'example.com':14 'first':2 'first-rest-create-many':1 'job':21 'job-rest-create-many':20 'last':8 'last-rest-create-many':7 'many':5,11,24 'rest':3,9,22 'test-rest-create-many-2@example.com':13",
+        "updatedAt": "2025-10-27T09:07:09.574Z",
+        "workPreference": null,
+      },
+    ],
+  },
+}
+`;
+
+exports[`Common API Feature Flag Comparison (IS_COMMON_API_ENABLED) REST API Operations Create One (POST) should create one person via REST with all fields 1`] = `
+{
+  "data": {
+    "createPerson": {
+      "avatarUrl": "https://example.com/avatar-rest-create-one.jpg",
+      "city": "City-rest-create-one",
+      "companyId": null,
+      "createdAt": "2025-10-27T09:07:09.527Z",
+      "deletedAt": null,
+      "id": "027a491f-a2a8-49b3-b886-99c793f5ca80",
+      "intro": "Intro text for rest-create-one",
+      "jobTitle": "Job-rest-create-one",
+      "performanceRating": null,
+      "position": 0,
+      "searchVector": "'+33':14,15 '+33123456789':13,16,18,20 '0':19 '33':17 'create':4,9,24 'example.com':12 'first':2 'first-rest-create-one':1 'job':22 'job-rest-create-one':21 'last':7 'last-rest-create-one':6 'one':5,10,25 'rest':3,8,23 'test-rest-create-one@example.com':11",
+      "updatedAt": "2025-10-27T09:07:09.527Z",
+      "workPreference": null,
+    },
+  },
+}
+`;
+
+exports[`Common API Feature Flag Comparison (IS_COMMON_API_ENABLED) REST API Operations Destroy One - Hard Delete (DELETE) should hard delete one person via REST 1`] = `
+{
+  "data": {
+    "deletePerson": {
+      "id": "027a491f-a2a8-49b3-b886-99c793f5ca92",
+    },
+  },
+}
+`;
+
+exports[`Common API Feature Flag Comparison (IS_COMMON_API_ENABLED) REST API Operations Find Many (GET) should find many people via REST with filters and pagination 1`] = `
+{
+  "data": {
+    "people": [
+      {
+        "attachments": [],
+        "avatarUrl": "https://example.com/avatar-rest-find-many-1.jpg",
+        "calendarEventParticipants": [],
+        "city": "City-rest-find-many-1",
+        "company": null,
+        "companyId": null,
+        "createdAt": "2025-10-27T09:07:10.196Z",
+        "deletedAt": null,
+        "favorites": [],
+        "id": "027a491f-a2a8-49b3-b886-99c793f5ca84",
+        "intro": "Intro text for rest-find-many-1",
+        "jobTitle": "Job-rest-find-many-1",
+        "messageParticipants": [],
+        "noteTargets": [],
+        "performanceRating": null,
+        "pointOfContactForOpportunities": [],
+        "position": 0,
+        "searchVector": "'+33':16 '+33123456789':17 '0123456789':19 '1':6,12,25 '123456789':15 '33123456789':18 'example.com':14 'find':4,10,23 'first':2 'first-rest-find-many':1 'job':21 'job-rest-find-many':20 'last':8 'last-rest-find-many':7 'many':5,11,24 'rest':3,9,22 'test-rest-find-many-1@example.com':13",
+        "taskTargets": [],
+        "timelineActivities": [],
+        "updatedAt": "2025-10-27T09:07:10.196Z",
+        "workPreference": null,
+      },
+      {
+        "attachments": [],
+        "avatarUrl": "https://example.com/avatar-rest-find-many-2.jpg",
+        "calendarEventParticipants": [],
+        "city": "City-rest-find-many-2",
+        "company": null,
+        "companyId": null,
+        "createdAt": "2025-10-27T09:07:10.196Z",
+        "deletedAt": null,
+        "favorites": [],
+        "id": "027a491f-a2a8-49b3-b886-99c793f5ca85",
+        "intro": "Intro text for rest-find-many-2",
+        "jobTitle": "Job-rest-find-many-2",
+        "messageParticipants": [],
+        "noteTargets": [],
+        "performanceRating": null,
+        "pointOfContactForOpportunities": [],
+        "position": -1,
+        "searchVector": "'+33':16 '+33123456789':17 '0123456789':19 '123456789':15 '2':6,12,25 '33123456789':18 'example.com':14 'find':4,10,23 'first':2 'first-rest-find-many':1 'job':21 'job-rest-find-many':20 'last':8 'last-rest-find-many':7 'many':5,11,24 'rest':3,9,22 'test-rest-find-many-2@example.com':13",
+        "taskTargets": [],
+        "timelineActivities": [],
+        "updatedAt": "2025-10-27T09:07:10.196Z",
+        "workPreference": null,
+      },
+    ],
+  },
+  "pageInfo": {
+    "endCursor": "eyJpZCI6IjAyN2E0OTFmLWEyYTgtNDliMy1iODg2LTk5Yzc5M2Y1Y2E4NSJ9",
+    "hasNextPage": false,
+    "hasPreviousPage": false,
+    "startCursor": "eyJpZCI6IjAyN2E0OTFmLWEyYTgtNDliMy1iODg2LTk5Yzc5M2Y1Y2E4NCJ9",
+  },
+  "totalCount": "2",
+}
+`;
+
+exports[`Common API Feature Flag Comparison (IS_COMMON_API_ENABLED) REST API Operations Find One (GET) should find one person via REST with depth parameter 1`] = `
+{
+  "data": {
+    "person": {
+      "attachments": [],
+      "avatarUrl": "https://example.com/avatar-rest-find-one.jpg",
+      "calendarEventParticipants": [],
+      "city": "City-rest-find-one",
+      "company": null,
+      "companyId": null,
+      "createdAt": "2025-10-27T09:07:09.662Z",
+      "deletedAt": null,
+      "favorites": [],
+      "id": "027a491f-a2a8-49b3-b886-99c793f5ca83",
+      "intro": "Intro text for rest-find-one",
+      "jobTitle": "Job-rest-find-one",
+      "messageParticipants": [],
+      "noteTargets": [],
+      "performanceRating": null,
+      "pointOfContactForOpportunities": [],
+      "position": 0,
+      "searchVector": "'+33':14,15 '+33123456789':13,16,18,20 '0':19 '33':17 'example.com':12 'find':4,9,24 'first':2 'first-rest-find-one':1 'job':22 'job-rest-find-one':21 'last':7 'last-rest-find-one':6 'one':5,10,25 'rest':3,8,23 'test-rest-find-one@example.com':11",
+      "taskTargets": [],
+      "timelineActivities": [],
+      "updatedAt": "2025-10-27T09:07:09.662Z",
+      "workPreference": null,
+    },
+  },
+}
+`;
+
+exports[`Common API Feature Flag Comparison (IS_COMMON_API_ENABLED) REST API Operations Update One (PUT) should update one person via REST 1`] = `
+{
+  "data": {
+    "updatePerson": {
+      "avatarUrl": "https://example.com/avatar-rest-update-one.jpg",
+      "city": "RestUpdatedCity",
+      "companyId": null,
+      "createdAt": "2025-10-27T09:07:10.482Z",
+      "deletedAt": null,
+      "id": "027a491f-a2a8-49b3-b886-99c793f5caa5",
+      "intro": "Intro text for rest-update-one",
+      "jobTitle": "RestUpdatedTitle",
+      "performanceRating": null,
+      "position": 0,
+      "searchVector": "'+33':14,15 '+33123456789':13,16,18,20 '0':19 '33':17 'example.com':12 'first':2 'first-rest-update-one':1 'last':7 'last-rest-update-one':6 'one':5,10 'rest':3,8 'restupdatedtitle':21 'test-rest-update-one@example.com':11 'update':4,9",
+      "updatedAt": "2025-10-27T09:07:10.526Z",
+      "workPreference": null,
+    },
+  },
+}
+`;

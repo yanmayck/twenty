@@ -8,7 +8,7 @@ export const PERSON_GQL_FIELDS = `
     name {
       firstName
       lastName
-    }   
+    }
     emails {
       primaryEmail
       additionalEmails

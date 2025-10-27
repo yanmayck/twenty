@@ -12,7 +12,7 @@ interface RestAPIRequestParams {
 export const makeRestAPIRequest = ({
   method,
   path,
-  bearer = API_KEY_ACCESS_TOKEN,
+  bearer = APPLE_JANE_ADMIN_ACCESS_TOKEN,
   body = {},
 }: RestAPIRequestParams) => {
   const client = request(`http://localhost:${APP_PORT}`);
