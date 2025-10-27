@@ -1,7 +1,5 @@
 import { Logger, Scope } from '@nestjs/common';
 
-import { In } from 'typeorm';
-
 import { Process } from 'src/engine/core-modules/message-queue/decorators/process.decorator';
 import { Processor } from 'src/engine/core-modules/message-queue/decorators/processor.decorator';
 import { MessageQueue } from 'src/engine/core-modules/message-queue/message-queue.constants';
@@ -14,6 +12,7 @@ import { MessagingProcessGroupEmailActionsService } from 'src/modules/messaging/
 
 export type MessagingProcessGroupEmailActionsJobData = {
   workspaceId: string;
+  messageChannelId: string;
 };
 
 @Processor({
@@ -32,10 +31,10 @@ export class MessagingProcessGroupEmailActionsJob {
 
   @Process(MessagingProcessGroupEmailActionsJob.name)
   async handle(data: MessagingProcessGroupEmailActionsJobData): Promise<void> {
-    const { workspaceId } = data;
+    const { workspaceId, messageChannelId } = data;
 
     this.logger.log(
-      `Processing pending group email actions for workspace ${workspaceId}`,
+      `Processing pending group email action for message channel ${messageChannelId} in workspace ${workspaceId}`,
     );
 
     const messageChannelRepository =
@@ -43,31 +42,43 @@ export class MessagingProcessGroupEmailActionsJob {
         'messageChannel',
       );
 
-    const messageChannels = await messageChannelRepository.find({
+    const messageChannel = await messageChannelRepository.findOne({
       where: {
-        pendingGroupEmailsAction: In([
-          MessageChannelPendingGroupEmailsAction.GROUP_EMAILS_DELETION,
-          MessageChannelPendingGroupEmailsAction.GROUP_EMAILS_IMPORT,
-        ]),
+        id: messageChannelId,
       },
     });
 
-    this.logger.log(
-      `Found ${messageChannels.length} message channels with pending group email actions in workspace ${workspaceId}`,
-    );
+    if (!messageChannel) {
+      this.logger.warn(
+        `Message channel ${messageChannelId} not found in workspace ${workspaceId}`,
+      );
 
-    for (const messageChannel of messageChannels) {
-      try {
-        await this.messagingProcessGroupEmailActionsService.processGroupEmailActions(
-          messageChannel,
-          workspaceId,
-        );
-      } catch (error) {
-        this.logger.error(
-          `Error processing group email actions for message channel ${messageChannel.id} in workspace ${workspaceId}: ${error.message}`,
-          error.stack,
-        );
-      }
+      return;
+    }
+
+    if (
+      messageChannel.pendingGroupEmailsAction ===
+        MessageChannelPendingGroupEmailsAction.NONE ||
+      !messageChannel.pendingGroupEmailsAction
+    ) {
+      this.logger.log(
+        `Message channel ${messageChannelId} no longer has a pending action, skipping`,
+      );
+
+      return;
+    }
+
+    try {
+      await this.messagingProcessGroupEmailActionsService.processGroupEmailActions(
+        messageChannel,
+        workspaceId,
+      );
+    } catch (error) {
+      this.logger.error(
+        `Error processing group email actions for message channel ${messageChannelId} in workspace ${workspaceId}: ${error.message}`,
+        error.stack,
+      );
+      throw error;
     }
   }
 }
