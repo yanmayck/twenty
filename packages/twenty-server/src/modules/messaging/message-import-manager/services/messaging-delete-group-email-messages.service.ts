@@ -8,7 +8,7 @@ import { TwentyORMGlobalManager } from 'src/engine/twenty-orm/twenty-orm-global.
 import { MessageChannelMessageAssociationWorkspaceEntity } from 'src/modules/messaging/common/standard-objects/message-channel-message-association.workspace-entity';
 import { type MessageParticipantWorkspaceEntity } from 'src/modules/messaging/common/standard-objects/message-participant.workspace-entity';
 import { MessagingMessageCleanerService } from 'src/modules/messaging/message-cleaner/services/messaging-message-cleaner.service';
-import { isGroupEmail } from 'src/utils/is-group-email';
+import { isGroupEmail } from 'src/modules/messaging/message-import-manager/utils/is-group-email';
 
 @Injectable()
 export class MessagingDeleteGroupEmailMessagesService {
