@@ -12,6 +12,7 @@ import { TwentyORMManager } from 'src/engine/twenty-orm/twenty-orm.manager';
 import { MessageChannelSyncStatusService } from 'src/modules/messaging/common/services/message-channel-sync-status.service';
 import { type MessageChannelMessageAssociationWorkspaceEntity } from 'src/modules/messaging/common/standard-objects/message-channel-message-association.workspace-entity';
 import {
+  MessageChannelPendingGroupEmailsAction,
   MessageChannelSyncStage,
   MessageChannelWorkspaceEntity,
 } from 'src/modules/messaging/common/standard-objects/message-channel.workspace-entity';
@@ -51,6 +52,23 @@ export class MessagingMessageListFetchService {
     workspaceId: string,
   ) {
     try {
+      if (
+        messageChannel.pendingGroupEmailsAction ===
+          MessageChannelPendingGroupEmailsAction.GROUP_EMAILS_DELETION ||
+        messageChannel.pendingGroupEmailsAction ===
+          MessageChannelPendingGroupEmailsAction.GROUP_EMAILS_IMPORT
+      ) {
+        this.logger.log(
+          `messageChannelId: ${messageChannel.id} Skipping message list fetch due to pending group emails action: ${messageChannel.pendingGroupEmailsAction}`,
+        );
+
+        await this.messageChannelSyncStatusService.scheduleMessageListFetch([
+          messageChannel.id,
+        ]);
+
+        return;
+      }
+
       await this.messageChannelSyncStatusService.markAsMessagesListFetchOngoing(
         [messageChannel.id],
       );
