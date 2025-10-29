@@ -215,10 +215,17 @@ export class WorkspaceService extends TypeOrmQueryService<WorkspaceEntity> {
     });
     await this.userWorkspaceService.createWorkspaceMember(workspace.id, user);
 
+    // Generate subdomain automatically using SubdomainManagerService
+    const subdomain = await this.subdomainManagerService.generateSubdomain({
+      userEmail: user.email,
+      workspaceDisplayName: data.displayName,
+    });
+
     const appVersion = this.twentyConfigService.get('APP_VERSION');
 
     await this.workspaceRepository.update(workspace.id, {
       displayName: data.displayName,
+      subdomain: subdomain,
       activationStatus: WorkspaceActivationStatus.ACTIVE,
       version: extractVersionMajorMinorPatch(appVersion),
     });
