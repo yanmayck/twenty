@@ -1,0 +1,30 @@
+{
+  "$schema": "https://railway.app/railway.schema.json",
+  "services": [
+    {
+      "name": "server",
+      "dockerfilePath": "twenty/Dockerfile",
+      "build": {
+        "builder": "NIXPACKS"
+      },
+      "deploy": {
+        "startCommand": "/app/entrypoint.sh node dist/src/main",
+        "healthcheckPath": "/healthz",
+        "healthcheckTimeout": 5000,
+        "healthcheckInterval": 5000,
+        "healthcheckRetries": 20,
+        "ports": [3000]
+      }
+    },
+    {
+      "name": "worker",
+      "dockerfilePath": "twenty/Dockerfile",
+      "build": {
+        "builder": "NIXPACKS"
+      },
+      "deploy": {
+        "startCommand": "/app/entrypoint.sh yarn worker:prod"
+      }
+    }
+  ]
+}
