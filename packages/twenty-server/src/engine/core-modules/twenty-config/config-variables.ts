@@ -1308,6 +1308,15 @@ export class ConfigVariables {
 }
 
 export const validate = (config: Record<string, unknown>): ConfigVariables => {
+  // Debug logging for troubleshooting
+  Logger.log('🔍 CONFIG VALIDATION DEBUG: Starting validation...');
+  Logger.log(`🔍 PG_DATABASE_URL received: ${config.PG_DATABASE_URL}`);
+  Logger.log(`🔍 REDIS_URL received: ${config.REDIS_URL}`);
+  Logger.log(`🔍 SERVER_URL received: ${config.SERVER_URL}`);
+  Logger.log(`🔍 FRONTEND_URL received: ${config.FRONTEND_URL}`);
+  Logger.log(`🔍 NODE_ENV received: ${config.NODE_ENV}`);
+  Logger.log(`🔍 IS_MULTIWORKSPACE_ENABLED received: ${config.IS_MULTIWORKSPACE_ENABLED}`);
+
   const validatedConfig = plainToClass(ConfigVariables, config);
 
   const validationErrors = validateSync(validatedConfig, {
@@ -1317,6 +1326,7 @@ export const validate = (config: Record<string, unknown>): ConfigVariables => {
   const validationWarnings = validateSync(validatedConfig, {
     groups: ['warning'],
   });
+
   const logValidatonErrors = (
     errorCollection: ValidationError[],
     type: 'error' | 'warn',
@@ -1325,14 +1335,16 @@ export const validate = (config: Record<string, unknown>): ConfigVariables => {
       if (!isDefined(error.constraints) || !isDefined(error.property)) {
         return;
       }
-      Logger[type](Object.values(error.constraints).join('\n'));
+      Logger[type](`❌ CONFIG VALIDATION ${type.toUpperCase()}: ${error.property} - ${Object.values(error.constraints).join('\n')}`);
     });
 
   if (validationWarnings.length > 0) {
+    Logger.log(`⚠️ CONFIG VALIDATION: Found ${validationWarnings.length} warnings`);
     logValidatonErrors(validationWarnings, 'warn');
   }
 
   if (validationErrors.length > 0) {
+    Logger.log(`❌ CONFIG VALIDATION: Found ${validationErrors.length} errors - throwing exception`);
     logValidatonErrors(validationErrors, 'error');
     throw new ConfigVariableException(
       'Config variables validation failed',
@@ -1340,5 +1352,6 @@ export const validate = (config: Record<string, unknown>): ConfigVariables => {
     );
   }
 
+  Logger.log('✅ CONFIG VALIDATION: All validations passed successfully!');
   return validatedConfig;
 };
