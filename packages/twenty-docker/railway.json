@@ -13,7 +13,10 @@
         "healthcheckTimeout": 5000,
         "healthcheckInterval": 5000,
         "healthcheckRetries": 20,
-        "ports": [3000]
+        "ports": [3000],
+        "environment": {
+          "PG_DATABASE_URL": "${DATABASE_URL}"
+        }
       }
     },
     {
@@ -23,7 +26,10 @@
         "builder": "NIXPACKS"
       },
       "deploy": {
-        "startCommand": "/app/entrypoint.sh yarn worker:prod"
+        "startCommand": "/app/entrypoint.sh yarn worker:prod",
+        "environment": {
+          "PG_DATABASE_URL": "${DATABASE_URL}"
+        }
       }
     }
   ]
