@@ -20,26 +20,18 @@ COPY ./packages/twenty-front/package.json /app/packages/twenty-front/
 RUN yarn && yarn cache clean && npx nx reset
 
 
-# Build the back
-FROM common-deps AS twenty-server-build
+# Build stage: Build both server and front
+FROM common-deps AS build-stage
 
-# Copy sourcecode after installing dependences to accelerate subsequents builds
+# Copy sourcecode
 COPY ./packages/twenty-emails /app/packages/twenty-emails
 COPY ./packages/twenty-shared /app/packages/twenty-shared
 COPY ./packages/twenty-server /app/packages/twenty-server
-
-RUN npx nx run twenty-server:build
-
-RUN yarn workspaces focus --production twenty-emails twenty-shared twenty-server
-
-# Build the front
-FROM common-deps AS twenty-front-build
-
-ARG REACT_APP_SERVER_BASE_URL
-
 COPY ./packages/twenty-front /app/packages/twenty-front
 COPY ./packages/twenty-ui /app/packages/twenty-ui
-COPY ./packages/twenty-shared /app/packages/twenty-shared
+
+# Build server and front
+RUN npx nx run twenty-server:build
 RUN npx nx build twenty-front
 
 
@@ -55,18 +47,31 @@ RUN apk add --no-cache postgresql-client
 
 COPY ./packages/twenty-docker/twenty/entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
+
+# Copy only production dependencies from common-deps
+COPY --from=common-deps /app/node_modules /app/node_modules
+COPY --from=common-deps /app/.yarn /app/.yarn
+COPY --from=common-deps /app/package.json /app/package.json
+COPY --from=common-deps /app/yarn.lock /app/yarn.lock
+COPY --from=common-deps /app/.yarnrc.yml /app/.yarnrc.yml
+COPY --from=common-deps /app/nx.json /app/nx.json
+COPY --from=common-deps /app/tsconfig.base.json /app/tsconfig.base.json
+
+# Prune dev dependencies
+WORKDIR /app
+RUN yarn workspaces focus --production --all
+
 WORKDIR /app/packages/twenty-server
 
-ARG REACT_APP_SERVER_BASE_URL
-ENV REACT_APP_SERVER_BASE_URL=$REACT_APP_SERVER_BASE_URL
+COPY --chown=1000 --from=build-stage /app/packages/twenty-server/dist /app/packages/twenty-server/dist
+COPY --chown=1000 --from=build-stage /app/packages/twenty-front/build /app/packages/twenty-server/dist/front
 
-ARG APP_VERSION
-ENV APP_VERSION=$APP_VERSION
-
-# Copy built applications from previous stages
-COPY --chown=1000 --from=twenty-server-build /app /app
-COPY --chown=1000 --from=twenty-server-build /app/packages/twenty-server /app/packages/twenty-server
-COPY --chown=1000 --from=twenty-front-build /app/packages/twenty-front/build /app/packages/twenty-server/dist/front
+# Copy necessary package.json files for workspaces to function
+COPY --chown=1000 --from=build-stage /app/packages/twenty-emails/package.json /app/packages/twenty-emails/package.json
+COPY --chown=1000 --from=build-stage /app/packages/twenty-shared/package.json /app/packages/twenty-shared/package.json
+COPY --chown=1000 --from=build-stage /app/packages/twenty-server/package.json /app/packages/twenty-server/package.json
+COPY --chown=1000 --from=build-stage /app/packages/twenty-front/package.json /app/packages/twenty-front/package.json
+COPY --chown=1000 --from=build-stage /app/packages/twenty-ui/package.json /app/packages/twenty-ui/package.json
 
 # Set metadata and labels
 LABEL org.opencontainers.image.source=https://github.com/twentyhq/twenty
