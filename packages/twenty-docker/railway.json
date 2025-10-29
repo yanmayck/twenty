@@ -15,7 +15,11 @@
         "healthcheckRetries": 20,
         "ports": [3000],
         "environment": {
-          "PG_DATABASE_URL": "${DATABASE_URL}"
+          "PG_DATABASE_URL": "${DATABASE_URL}",
+          "REDIS_URL": "${REDIS_URL}",
+          "SERVER_URL": "${RAILWAY_STATIC_URL}",
+          "APP_SECRET": "${APP_SECRET}",
+          "NODE_OPTIONS": "--max-old-space-size=4096"
         }
       }
     },
@@ -28,7 +32,11 @@
       "deploy": {
         "startCommand": "/app/entrypoint.sh yarn worker:prod",
         "environment": {
-          "PG_DATABASE_URL": "${DATABASE_URL}"
+          "PG_DATABASE_URL": "${DATABASE_URL}",
+          "REDIS_URL": "${REDIS_URL}",
+          "SERVER_URL": "${RAILWAY_STATIC_URL}",
+          "APP_SECRET": "${APP_SECRET}",
+          "NODE_OPTIONS": "--max-old-space-size=4096"
         }
       }
     }
