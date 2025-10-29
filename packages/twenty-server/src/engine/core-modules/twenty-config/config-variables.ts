@@ -1308,6 +1308,37 @@ export class ConfigVariables {
 }
 
 export const validate = (config: Record<string, unknown>): ConfigVariables => {
+  // Railway environment detection and URL building
+  const isRailway = !!config.RAILWAY_ENVIRONMENT || !!config.RAILWAY_PROJECT_ID;
+
+  if (isRailway) {
+    Logger.log('🚂 RAILWAY DETECTED: Auto-configuring database URLs...');
+
+    // Auto-build PostgreSQL URL from Railway variables
+    if (!config.PG_DATABASE_URL && config.POSTGRES_USER && config.POSTGRES_PASSWORD && config.POSTGRES_HOST) {
+      const pgUrl = `postgresql://${config.POSTGRES_USER}:${config.POSTGRES_PASSWORD}@${config.POSTGRES_HOST}:${config.POSTGRES_PORT || 5432}/${config.POSTGRES_DB}`;
+      config.PG_DATABASE_URL = pgUrl;
+      Logger.log(`🔧 Auto-built PG_DATABASE_URL: ${pgUrl}`);
+    }
+
+    // Auto-build Redis URL from Railway variables
+    if (!config.REDIS_URL && config.REDIS_URL) {
+      Logger.log(`🔧 Using Redis URL: ${config.REDIS_URL}`);
+    }
+
+    // Auto-set SERVER_URL from Railway
+    if (!config.SERVER_URL && config.RAILWAY_STATIC_URL) {
+      config.SERVER_URL = `https://${config.RAILWAY_STATIC_URL}`;
+      Logger.log(`🔧 Auto-set SERVER_URL: ${config.SERVER_URL}`);
+    }
+
+    // Auto-set FRONTEND_URL from Railway
+    if (!config.FRONTEND_URL && config.RAILWAY_STATIC_URL) {
+      config.FRONTEND_URL = `https://${config.RAILWAY_STATIC_URL}`;
+      Logger.log(`🔧 Auto-set FRONTEND_URL: ${config.FRONTEND_URL}`);
+    }
+  }
+
   // Debug logging for troubleshooting
   Logger.log('🔍 CONFIG VALIDATION DEBUG: Starting validation...');
   Logger.log(`🔍 PG_DATABASE_URL received: ${config.PG_DATABASE_URL}`);
@@ -1316,6 +1347,7 @@ export const validate = (config: Record<string, unknown>): ConfigVariables => {
   Logger.log(`🔍 FRONTEND_URL received: ${config.FRONTEND_URL}`);
   Logger.log(`🔍 NODE_ENV received: ${config.NODE_ENV}`);
   Logger.log(`🔍 IS_MULTIWORKSPACE_ENABLED received: ${config.IS_MULTIWORKSPACE_ENABLED}`);
+  Logger.log(`🔍 RAILWAY_ENVIRONMENT: ${config.RAILWAY_ENVIRONMENT}`);
 
   const validatedConfig = plainToClass(ConfigVariables, config);
 
