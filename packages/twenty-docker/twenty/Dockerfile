@@ -38,12 +38,8 @@ RUN npx nx build twenty-front
 # Final stage: Run the application
 FROM node:24-alpine AS twenty
 
-# Used to run healthcheck in docker
-RUN apk add --no-cache curl jq
-
-RUN npm install -g tsx
-
-RUN apk add --no-cache postgresql-client
+# Install system dependencies for canvas and others
+RUN apk add --no-cache curl jq tsx postgresql-client libcairo-dev libjpeg-turbo-dev libgif-dev libpixman-1-dev pango-dev
 
 COPY ./packages/twenty-docker/twenty/entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
