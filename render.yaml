@@ -30,6 +30,10 @@ services:
       - key: NODE_ENV
         value: production
 
+      # Define porta explicitamente para evitar timeout
+      - key: PORT
+        value: "3000"
+
       # Limita memória do Node para não estourar os 512MB do plano Free
       - key: NODE_OPTIONS
         value: "--max-old-space-size=460"
