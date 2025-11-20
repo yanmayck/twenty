@@ -131,13 +131,6 @@ services:
       - key: IS_WORKSPACE_CREATION_LIMITED_TO_SERVER_ADMINS
         value: "false"  # true = só admins podem criar workspaces
 
-  # ===== REDIS SERVICE (Key Value) =====
-  # Adicionado na seção SERVICES, não databases!
-  - type: keyvalue
-    name: twenty-redis
-    plan: free
-    ipAllowList: [] # Acessível apenas internamente por padrão
-
       # ===== Multi-Workspace (ESSENCIAL para SaaS) =====
       - key: IS_MULTIWORKSPACE_ENABLED
         value: "true"
@@ -225,6 +218,13 @@ services:
       # ===== Limites de Workspace (opcional) =====
       - key: IS_WORKSPACE_CREATION_LIMITED_TO_SERVER_ADMINS
         value: "false"  # true = só admins podem criar workspaces
+
+  # ===== REDIS SERVICE (Key Value) =====
+  # Adicionado na seção SERVICES, não databases!
+  - type: keyvalue
+    name: twenty-redis
+    plan: free
+    ipAllowList: [] # Acessível apenas internamente por padrão
 
 # ===== DATABASES =====
 databases:
