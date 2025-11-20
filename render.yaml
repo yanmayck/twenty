@@ -3,7 +3,6 @@ services:
   - type: web
     name: twenty-server
     runtime: docker
-    buildContext: .
     dockerfilePath: ./Dockerfile.render
     autoDeploy: true
     plan: free  # ✅ GRÁTIS! (mas dorme após 15 min)
