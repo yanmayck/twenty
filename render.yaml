@@ -5,7 +5,7 @@ services:
     runtime: image
     image:
       url: twentycrm/twenty:latest
-    dockerCommand: "sh -c 'node ../../node_modules/typeorm/cli.js migration:run -d dist/src/database/typeorm/core/core.datasource.js && node dist/src/main'"
+    dockerCommand: sh -c "node ../../node_modules/typeorm/cli.js migration:run -d dist/src/database/typeorm/core/core.datasource.js && node dist/src/main"
     autoDeploy: true
     plan: free  # ✅ GRÁTIS! (mas dorme após 15 min)
 
@@ -53,6 +53,10 @@ services:
 
       # ===== Multi-Workspace (ESSENCIAL para SaaS) =====
       - key: IS_MULTIWORKSPACE_ENABLED
+        value: "true"
+
+      # Desativa migração automática do entrypoint (que usa muita RAM)
+      - key: DISABLE_DB_MIGRATIONS
         value: "true"
 
       - key: DEFAULT_SUBDOMAIN
