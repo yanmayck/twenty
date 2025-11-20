@@ -30,6 +30,10 @@ services:
       - key: NODE_ENV
         value: production
 
+      # Limita memória do Node para não estourar os 512MB do plano Free
+      - key: NODE_OPTIONS
+        value: "--max-old-space-size=460"
+
       # ===== Database Postgres (conecta ao FREE) =====
       - key: PG_DATABASE_URL
         fromDatabase:
@@ -98,7 +102,7 @@ services:
 
       # ===== Billing / Stripe =====
       - key: IS_BILLING_ENABLED
-        value: "false"
+        value: "true"
 
       - key: BILLING_STRIPE_API_KEY
         sync: false
