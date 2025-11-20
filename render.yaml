@@ -5,7 +5,7 @@ services:
     runtime: image
     image:
       url: twentycrm/twenty:latest
-    dockerCommand: "sh -c ./scripts/render-run.sh"
+    dockerCommand: "sh -c 'export PG_DATABASE_URL=postgres://postgres:postgres@$PG_DATABASE_HOST:$PG_DATABASE_PORT/default && node ../../node_modules/typeorm/cli.js migration:run -d dist/src/database/typeorm/core/core.datasource.js && node dist/src/main'"
     autoDeploy: true
     plan: free  # ✅ GRÁTIS! (mas dorme após 15 min)
 
