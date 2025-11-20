@@ -36,11 +36,107 @@ services:
           name: twenty-postgres
           property: connectionString
 
-      # ===== Redis (conecta ao FREE) =====
+      # ===== Redis (Nativo do Render - FREE) =====
       - key: REDIS_URL
-        fromDatabase:
+        fromService:
           name: twenty-redis
+          type: keyvalue
           property: connectionString
+
+      # ===== Multi-Workspace (ESSENCIAL para SaaS) =====
+      - key: IS_MULTIWORKSPACE_ENABLED
+        value: "true"
+
+      - key: DEFAULT_SUBDOMAIN
+        value: "app"
+
+      # ===== Email SMTP (você preenche no dashboard) =====
+      - key: EMAIL_DRIVER
+        value: "SMTP"
+
+      - key: EMAIL_SMTP_HOST
+        sync: false  # Preencha: smtp.sendgrid.net
+
+      - key: EMAIL_SMTP_PORT
+        value: "587"
+
+      - key: EMAIL_SMTP_USER
+        sync: false  # Preencha: apikey
+
+      - key: EMAIL_SMTP_PASSWORD
+        sync: false  # Preencha: SG.xxx
+
+      - key: EMAIL_FROM_ADDRESS
+        value: "noreply@seudominio.com"
+
+      - key: EMAIL_FROM_NAME
+        value: "Equipe Twenty"
+
+      # ===== Storage S3-Compatible =====
+      - key: STORAGE_TYPE
+        value: "S3"
+
+      # Para Cloudflare R2, use "auto"
+      # Para AWS S3, use "us-east-1" ou sua região
+      - key: STORAGE_S3_REGION
+        value: "auto"
+
+      - key: STORAGE_S3_NAME
+        sync: false  # Nome do bucket
+
+      # Para R2: https://xxx.r2.cloudflarestorage.com
+      # Para Spaces: https://nyc3.digitaloceanspaces.com
+      # Para AWS S3: deixe vazio ou https://s3.amazonaws.com
+      - key: STORAGE_S3_ENDPOINT
+        sync: false
+
+      - key: STORAGE_S3_ACCESS_KEY_ID
+        sync: false
+
+      - key: STORAGE_S3_SECRET_ACCESS_KEY
+        sync: false
+
+      # ===== Billing / Stripe =====
+      - key: IS_BILLING_ENABLED
+        value: "true"
+
+      - key: BILLING_STRIPE_API_KEY
+        sync: false
+
+      - key: BILLING_STRIPE_WEBHOOK_SECRET
+        sync: false
+
+      - key: BILLING_PLAN_REQUIRED_LINK
+        sync: false  # Ex: https://seusite.com/pricing
+
+      # ===== IA (Opcional) =====
+      - key: OPENAI_API_KEY
+        sync: false
+
+      - key: ANTHROPIC_API_KEY
+        sync: false
+
+      - key: XAI_API_KEY
+        sync: false
+
+      # ===== Configurações de Segurança =====
+      - key: AUTH_PASSWORD_ENABLED
+        value: "true"
+
+      # Desative se não tiver SMTP configurado ainda
+      - key: IS_EMAIL_VERIFICATION_REQUIRED
+        value: "false"
+
+      # ===== Limites de Workspace (opcional) =====
+      - key: IS_WORKSPACE_CREATION_LIMITED_TO_SERVER_ADMINS
+        value: "false"  # true = só admins podem criar workspaces
+
+  # ===== REDIS SERVICE (Key Value) =====
+  # Adicionado na seção SERVICES, não databases!
+  - type: keyvalue
+    name: twenty-redis
+    plan: free
+    ipAllowList: [] # Acessível apenas internamente por padrão
 
       # ===== Multi-Workspace (ESSENCIAL para SaaS) =====
       - key: IS_MULTIWORKSPACE_ENABLED
@@ -140,13 +236,11 @@ databases:
     # Upgrade para "starter" ($7/mês) quando tiver clientes
     ipAllowList: []  # Permite conexões de qualquer IP
 
-  # Redis FREE (25MB RAM, 50 conexões)
-  - name: twenty-redis
-    plan: free
-    # ⚠️ SEM persistência - dados se perdem ao reiniciar
-    # Política de memória: remove keys antigas automaticamente
-    maxmemoryPolicy: allkeys-lru
-    ipAllowList: []
+# ===== REDIS NATIVO =====
+# Configurado como serviço KeyValue FREE
+# ⚠️ Sem persistência (dados somem ao reiniciar)
+# Para produção com persistência, use Upstash ou plano pago
+
 
 # ===== NOTAS IMPORTANTES =====
 #
