@@ -67,7 +67,7 @@ services:
     sizeGB: 5
 - type: pserv
   name: twenty_postgres
-  plan: STARTER
+  plan: FREE
   runtime: image
   image:
     url: twentycrm/twenty-postgres:latest
