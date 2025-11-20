@@ -1,0 +1,12 @@
+FROM twentycrm/twenty:latest
+
+# Copia o script de inicialização otimizado
+COPY render-start.sh /app/render-start.sh
+
+# Garante permissão de execução
+USER root
+RUN chmod +x /app/render-start.sh
+USER 1000
+
+# Define o script como comando padrão
+CMD ["/app/render-start.sh"]
