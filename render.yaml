@@ -30,6 +30,20 @@ services:
         name: twenty_postgres
         type: pserv
         property: port
+    - key: IS_BILLING_ENABLED
+      value: "true"
+    - key: BILLING_STRIPE_API_KEY
+      sync: false
+    - key: BILLING_STRIPE_WEBHOOK_SECRET
+      sync: false
+    - key: BILLING_PLAN_REQUIRED_LINK
+      sync: false
+    - key: OPENAI_API_KEY
+      sync: false
+    - key: ANTHROPIC_API_KEY
+      sync: false
+    - key: XAI_API_KEY
+      sync: false
 - type: worker
   name: worker
   runtime: image
@@ -67,7 +81,7 @@ services:
     sizeGB: 5
 - type: pserv
   name: twenty_postgres
-  plan: FREE
+  plan: STARTER
   runtime: image
   image:
     url: twentycrm/twenty-postgres:latest
