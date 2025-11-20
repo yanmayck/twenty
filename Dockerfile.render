@@ -10,3 +10,4 @@ USER 1000
 
 # Define o script como comando padrão
 CMD ["/app/render-start.sh"]
+
