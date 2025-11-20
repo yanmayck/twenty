@@ -1,0 +1,12 @@
+[build]
+builder = "NIXPACKS"
+buildCommand = "yarn install && yarn build"
+
+[deploy]
+startCommand = "yarn start:prod"
+healthcheckPath = "/healthz"
+healthcheckTimeout = 100
+restartPolicyType = "ON_FAILURE"
+
+[service]
+name = "twenty-server"
