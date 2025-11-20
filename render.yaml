@@ -5,7 +5,7 @@ services:
     runtime: image
     image:
       url: twentycrm/twenty:latest
-    dockerCommand: sh -c "node ../../node_modules/typeorm/cli.js migration:run -d dist/src/database/typeorm/core/core.datasource.js && node dist/src/main"
+    dockerCommand: "sh -c 'node /app/node_modules/typeorm/cli.js migration:run -d /app/packages/twenty-server/dist/src/database/typeorm/core/core.datasource.js && node /app/packages/twenty-server/dist/src/main'"
     autoDeploy: true
     plan: free  # ✅ GRÁTIS! (mas dorme após 15 min)
 
