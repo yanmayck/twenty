@@ -1,5 +1,5 @@
 [build]
-builder = "RAILPACK"
+builder = "DOCKERFILE"
 buildCommand = "yarn install && yarn build"
 
 [deploy]
