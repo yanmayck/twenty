@@ -36,6 +36,7 @@
             "env": {
                 "PORT": "3000",
                 "PG_DATABASE_URL": "${{ twenty-postgres.DATABASE_URL }}",
+                "DATABASE_URL": "${{ twenty-postgres.DATABASE_URL }}",
                 "REDIS_URL": "${{ twenty-redis.REDIS_URL }}",
                 "SERVER_URL": "https://${{ RAILWAY_PUBLIC_DOMAIN }}",
                 "FRONT_BASE_URL": "https://${{ RAILWAY_PUBLIC_DOMAIN }}",
